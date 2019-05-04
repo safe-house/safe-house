@@ -332,7 +332,7 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 .gtco-cover .display-t,
 .gtco-cover .display-tc {
-  height: 900px;
+  height: 700px;
   display: table;
   width: 100%;
 }
@@ -585,12 +585,14 @@ form label {
   padding: 7em 0;
   clear: both;
 }
+
 #gtco-services,
 #gtco-footer,
 .gtco-section {
   padding: 1em 0;
   clear: both;
 }
+
 @media screen and (max-width: 768px) {
   #gtco-features,
   #gtco-features-2,
@@ -599,7 +601,7 @@ form label {
   #gtco-started,
   #gtco-footer,
   .gtco-section {
-    padding: 3em 0;
+    padding: 1em 0;
   }
 }
 
@@ -1193,7 +1195,6 @@ form label {
 }
 @media screen and (max-width: 768px) {
   .gtco-nav-toggle {
-    
   }
   #gtco-offcanvas {
     display: block;
