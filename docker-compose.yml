@@ -1,17 +1,38 @@
-version: '3'
+version: "3"
 
 services:
-  db:
-    image: postgres
-    volumes:
-      - /var/lib/postgresql/data
-  web:
-    build: .
-    command: python manage.py runserver 0.0.0.0:80
-    volumes:
-      - .:/code
-    ports:
-      - "80:80"
-    restart: always 
-    depends_on:
-      - db
+    nginx:
+        image: nginx:latest
+        expose:
+            - "8000"
+        ports:
+            - "80:8000"
+        volumes:
+            - .:/code
+            - ./nginx:/etc/nginx/conf.d
+            - ./staticfiles:/static
+        depends_on:
+            - web
+        restart: always
+    web:
+        build: .
+        command: bash -c "gunicorn Landing.wsgi -b 0.0.0.0:8000"
+        depends_on:
+            - db
+        volumes:
+            - .:/code
+            - ./staticfiles:/code/staticfiles
+        expose:
+            - "8000"
+        ports:
+            - "8000:8000"
+        restart: always
+
+    db:
+        image: postgres
+        environment:
+            POSTGRES_DB: "landing"
+            POSTGRES_USER: "adminadmin"
+            POSTGRES_PASSWORD: "safehouse_2019"
+        volumes:
+            - /var/lib/postgresql/data
