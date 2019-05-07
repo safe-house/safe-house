@@ -7,9 +7,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>{% block title %}SafeHouse{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="o"/>
-    <meta name="keywords" content=""/>
-    <meta name="author" content=""/>
+    <meta name="description" content="Система автоматичного перекривання кранів у разі витоку газу або води.">
+    <meta name="keywords"
+          content="розумний дім, датчик газу,  датчик чадного газу, розумний будинок, потоп, чадний газ, датчик води, SafeHouse, safehouse, Safehouse">
+    <meta name="author" content="SafeHouse">
+    <meta name="title" content="SafeHouse">
 
     <!-- Facebook and Twitter integration -->
     <meta property="og:title" content=""/>
@@ -69,7 +71,7 @@
         </nav>
 
         <header id="gtco-header" class="gtco-cover" role="banner"
-                style="background-image:url({% static 'index/images/sensor-hub-3.png' %});">
+                style="background-image:url({% static 'index/images/sensor-hub.webp' %});">
             <div class="gtco-container">
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2 text-center">
@@ -157,7 +159,7 @@
 
                     <div class="col-md-6">
                         <div class="gtco-video gtco-bg"
-                             style="background-image: url({% static 'index/images/boxed.JPG' %}); ">
+                             style="background-image: url({% static 'index/images/boxed.webp' %}); ">
                         </div>
                     </div>
                 </div>
@@ -318,14 +320,10 @@
 <script src="{% static 'index/js/jquery.min.js' %}"></script>
 <!-- jQuery Easing -->
 <script src="{% static 'index/js/jquery.easing.1.3.js' %}"></script>
-<!-- Bootstrap -->
-<script src="{% static 'index/js/bootstrap.min.js' %}"></script>
 <!-- Waypoints -->
 <script src="{% static 'index/js/jquery.waypoints.min.js' %}"></script>
 <!-- Carousel -->
 <script src="{% static 'index/js/owl.carousel.min.js' %}"></script>
-<!-- countTo -->
-<script src="{% static 'index/js/jquery.countTo.js' %}"></script>
 <!-- Magnific Popup -->
 <script src="{% static 'index/js/jquery.magnific-popup.min.js' %}"></script>
 <script src="{% static 'index/js/magnific-popup-options.js' %}"></script>
@@ -334,11 +332,15 @@
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139406041-1"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    window.dataLayer = window.dataLayer || [];
 
-  gtag('config', 'UA-139406041-1');
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-139406041-1');
 </script>
 
 </body>
