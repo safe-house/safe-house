@@ -125,3 +125,6 @@ dmypy.json
 #My stuff
 .idea/
 *.tar
+production_settings.py
+docker-compose-local.yml
+staticfiles/
