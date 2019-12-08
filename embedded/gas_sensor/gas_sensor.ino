@@ -1,48 +1,40 @@
+#include "Adafruit_CCS811.h"
 #include <SoftwareSerial.h>
 
-#define SSerialRX        8
-#define SSerialTX        9
+SoftwareSerial MyBlue(8, 9); // RX | TX
 
-#define SSerialTxControl 2
+uint16_t eCO2, TVOC;
 
-#define RS485Transmit    HIGH
-#define RS485Receive     LOW
+Adafruit_CCS811 ccs;
 
-#define input         A4
-#define LED           5
-
-SoftwareSerial RS485Serial(SSerialRX, SSerialTX);
-
-int byteReceived;
-int byteSend;
-float sensorValue;
-float sensorVoltage;
-
-
-void setup()
-{
+void setup() {
   Serial.begin(9600);
+  MyBlue.begin(38400);
 
-  pinMode(SSerialTxControl, OUTPUT);
-  pinMode(LED, OUTPUT);
+  if (!ccs.begin()) {
+    Serial.println("Failed to start sensor! Please check your wiring.");
+    while (1);
+  }
 
-  digitalWrite(SSerialTxControl, RS485Transmit);
-
-  RS485Serial.begin(4800);
+  // Wait for the sensor to be ready
+  while (!ccs.available());
 }
 
+void loop() {
+  if (ccs.available()) {
+    if (!ccs.readData()) {
+      eCO2 = ccs.geteCO2();
+      TVOC = ccs.getTVOC();
+            Serial.print(eCO2);
+      if ( eCO2 > 1500 ){
+        MyBlue.write(1);
+      }
 
-void loop()
-{
-  sensorValue = analogRead(input);
-  sensorVoltage = sensorValue / 1024 * 5.0;
-  if (sensorVoltage > 1) {
-    RS485Serial.write(1);
-    delay(10);
-    digitalWrite(LED, HIGH);
+    }
+    else {
+      Serial.println("ERROR!");
+    }
   }
-  else {
-    digitalWrite(LED, LOW);
-  }
-  delay(500);
+  
+  delay(1000);
 }
