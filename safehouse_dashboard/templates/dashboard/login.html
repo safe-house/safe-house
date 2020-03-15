@@ -1,11 +1,12 @@
 {% extends "./base.html" %}
 
 {% block body %}
-<form class="" action="index.html" method="post">
-      <input type="text" name="" value="login">
+<form class="" action="{% url 'submit_login' %}" method="post">
+{% csrf_token %}
+      <input type="text" required name="email" placeholder="email">
     <br>
 
-      <input type="text" name="" value="password">
+      <input type="text" required name="password" placeholder="password">
     <br>
       <button type="submit" name="Login">Login</button>
     </form>

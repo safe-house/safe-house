@@ -1,0 +1,14 @@
+{% extends "./base.html" %}
+
+{% block body %}
+<form action="{% url 'polls:vote' question.id %}" method="post">
+{% csrf_token %}
+      <input type="text" name="" value="login">
+    <br>
+
+      <input type="text" name="" value="password">
+    <br>
+    <input type="text" name="" value="repeat password">
+      <button type="submit" name="Login">Register</button>
+    </form>
+{% endblock %}
