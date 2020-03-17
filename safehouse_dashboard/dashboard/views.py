@@ -4,11 +4,12 @@ from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 
 
 @login_required(login_url='/dashboard/login/')
 def dashboard_view(request):
-    return HttpResponse(str(request.user))
+    return render(request, 'dashboard/index.html')
 
 
 def login_view(request):
@@ -55,9 +56,10 @@ def confirm_register(request):
                 password=request.POST['password'],
                 first_name=request.POST['name'],
                 last_name=request.POST['surname'],
-                is_active=0,
+                is_active=1,
             )
             user.save()
+            send_email(user.email)
 
             return render(request, 'dashboard/register_confirmation.html')
         except Exception as ex:
@@ -69,3 +71,11 @@ def confirm_register(request):
 def confirm_email(request):
     pass
 
+
+def send_email(email):
+    send_mail('Auto-email',
+              'Hello, this is automatic email',
+              'danylo.shyshla.knm.2018@lpnu.ua',
+              [email],
+              fail_silently=False)
+    return None
