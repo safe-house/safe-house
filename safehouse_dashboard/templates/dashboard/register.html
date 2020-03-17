@@ -1,14 +1,17 @@
 {% extends "./base.html" %}
 
 {% block body %}
-<form action="{% url 'polls:vote' question.id %}" method="post">
+<form class="" action="{% url 'confirm_register' %}" method="post">
 {% csrf_token %}
-      <input type="text" name="" value="login">
+      <input type="text" required name="email" placeholder="email">
     <br>
 
-      <input type="text" name="" value="password">
+      <input type="text" required name="password" placeholder="password">
     <br>
-    <input type="text" name="" value="repeat password">
-      <button type="submit" name="Login">Register</button>
+    <input type="text" required name="name" placeholder="First Name">
+    <br>
+    <input type="text" required name="surname" placeholder="Surname">
+    <br>
+      <button type="submit" name="Register">Login</button>
     </form>
 {% endblock %}

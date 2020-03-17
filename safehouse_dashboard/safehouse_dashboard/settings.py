@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'safehouse_dashboard.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': "safehouse",
+        'NAME': "safehouse1",
         'USER': "safehouse",
         'PASSWORD': "safehouse2020",
         'HOST': "localhost",
