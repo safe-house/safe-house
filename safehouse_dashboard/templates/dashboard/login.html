@@ -1,13 +1,47 @@
 {% extends "./base.html" %}
 
 {% block body %}
-<form class="" action="{% url 'submit_login' %}" method="post">
+{#<form class="" action="{% url 'submit_login' %}" method="post">#}
+{#{% csrf_token %}#}
+{#      <input type="text" required name="email" placeholder="email">#}
+<div class="container-fluid justify-content-center p-5" style="max-width: 400px">
+    <div class="card card-small mb-4">
+      <div class="card-header border-bottom">
+        <h6 class="m-0">Login</h6>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item px-3">
+          <form class="" action="{% url 'submit_login' %}" method="post">
 {% csrf_token %}
-      <input type="text" required name="email" placeholder="email">
-    <br>
 
-      <input type="text" required name="password" placeholder="password">
-    <br>
-      <button type="submit" name="Login">Login</button>
-    </form>
+              <div class="input-group mb-3">
+      <div class="input-group input-group-seamless">
+        <span class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="material-icons">person</i>
+          </span>
+        </span>
+        <input type="text" class="form-control" id="form1-username" placeholder="Username" required name="email"> </div>
+    </div>
+
+   <div class="input-group mb-3">
+      <div class="input-group input-group-seamless">
+        <input type="password" class="form-control" id="form2-password" placeholder="Password" required name="password">
+        <span class="input-group-append">
+          <span class="input-group-text">
+            <i class="material-icons">lock</i>
+          </span>
+        </span>
+      </div>
+    </div>
+
+              <button type="submit" class="mb-2 btn btn-primary mr-2">Login</button>
+              <a type="button" class="mb-2 btn btn-primary mr-2" href="/dashboard/register">Register</a>
+{#               <button type="submit" name="Login">Login</button>#}
+
+  </form>
+</li>
+</ul>
+</div>
+</div>
 {% endblock %}

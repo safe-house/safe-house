@@ -1,17 +1,66 @@
 {% extends "./base.html" %}
 
 {% block body %}
-<form class="" action="{% url 'confirm_register' %}" method="post">
-{% csrf_token %}
-      <input type="text" required name="email" placeholder="email">
-    <br>
+    {#<form class="" action="{% url 'confirm_register' %}" method="post">#}
+    {#{% csrf_token %}#}
+    {#      <input type="text" required name="email" placeholder="email">#}
+    {#    <br>#}
+    {##}
+    {#      <input type="text" required name="password" placeholder="password">#}
+    {#    <br>#}
+    {#    <input type="text" required name="name" placeholder="First Name">#}
+    {#    <br>#}
+    {#    <input type="text" required name="surname" placeholder="Surname">#}
+    {#    <br>#}
+    {#      <button type="submit" name="Register">Login</button>#}
+    {#    </form>#}
 
-      <input type="text" required name="password" placeholder="password">
-    <br>
-    <input type="text" required name="name" placeholder="First Name">
-    <br>
-    <input type="text" required name="surname" placeholder="Surname">
-    <br>
-      <button type="submit" name="Register">Login</button>
-    </form>
+    <div class="container-fluid justify-content-center p-5" style="max-width: 400px">
+    <div class="card card-small mb-4">
+        <div class="card-header border-bottom">
+            <h6 class="m-0">Register</h6>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item px-3">
+
+                <form class="" action="{% url 'confirm_register' %}" method="post">
+                    {% csrf_token %}
+
+                    <div class="input-group mb-3">
+                        <div class="input-group input-group-seamless">
+        <span class="input-group-prepend">
+          <span class="input-group-text">
+            <i class="material-icons">person</i>
+          </span>
+        </span>
+                            <input type="text" class="form-control" id="form1-username" placeholder="Username" required
+                                   name="email"></div>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group input-group-seamless">
+                            <input type="password" class="form-control" id="form2-password" placeholder="Password"
+                                   required name="password">
+                            <span class="input-group-append">
+          <span class="input-group-text">
+            <i class="material-icons">lock</i>
+          </span>
+        </span>
+                        </div>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" required name="name" placeholder="First Name">
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" required name="surname" placeholder="Surname">
+                    </div>
+                    <div class="container-fluid justify-content-center">
+                    <button type="submit" class="mb-2 btn btn-primary mr-2">Register</button>
+                    </div>
+                </form>
+            </li>
+        </ul>
+    </div>
+    </div>
 {% endblock %}

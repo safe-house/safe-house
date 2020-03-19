@@ -1,5 +1,15 @@
 {% extends "./base.html" %}
 
 {% block body %}
-    <h1>Please check your email address to confirm your email and  finish registration</h1>
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+          <div class="error">
+            <div class="error__content">
+              <h3>Please check your inbox!</h3>
+              <p>We have sent you confirmation link. Please follow it to activate your account.</p>
+              <a type="button" class="btn btn-accent btn-pill" href="/dashboard">← Go to Login</a>
+            </div>
+          </div>
+      </div>
+    </div>
 {% endblock %}
