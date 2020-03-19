@@ -2,28 +2,25 @@ from django.db import connection
 import time
 
 
-def create_user(self):
+def save_token(user_id, token):
     with connection.cursor() as cursor:
-        cursor.execute("CALL CREATE_USER( %s,  %s,  %s,  %s,  %s)", self)
+        cursor.execute("insert into authentification (auth_user_id, code, expire_at)"
+                       " VALUES (%s, %s, %s)", [user_id, token, time.strftime('%Y-%m-%d %H:%M:%S')])
 
 
-def login(email, password):
+def check_token(user_id, token):
     with connection.cursor() as cursor:
-        cursor.execute("select user.id from user "
-                       "INNER JOIN password on user.id = password.user_id"
-                       " WHERE email = %s and password= %s", [email, password])
+        cursor.execute("select auth_user_id, code, expire_at from authentification "
+                       "where auth_user_id=%s and code=%s",
+                       [user_id, token])
         row = cursor.fetchone()
         return row
 
 
-def activate_user(email, password):
+def activate_user(user_id):
     with connection.cursor() as cursor:
-        cursor.execute("select user.id from user "
-                       "INNER JOIN password on user.id = password.user_id"
-                       " WHERE email = %s and password= %s", [email, password])
+        cursor.execute("update auth_user set is_active=1 where id=%s", [user_id])
+        cursor.execute("DELETE FROM authentification where auth_user_id=%s", [user_id])
 
 
-def confirmation_creation(user_id):
-    with connection.cursor() as cursor:
-        cursor.execute("insert into authentification (auth_user_id, code, expire_at)"
-                       " VALUES (%s, %s, %s)", [user_id, "FFF555", time.strftime('%Y-%m-%d %H:%M:%S')])
+

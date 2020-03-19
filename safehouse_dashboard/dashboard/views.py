@@ -1,20 +1,25 @@
+import secrets
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.contrib.auth import logout, authenticate, login
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 
+from dashboard.lib import sql
 
-@login_required(login_url='/dashboard/login/')
+DOMAIN_NAME = "127.0.0.1:8000/"
+
+
 def dashboard_view(request):
-    return render(request, 'dashboard/index.html')
+    if request.user.is_authenticated:
+        return render(request, 'dashboard/index.html')
+    else:
+        return redirect('/dashboard/login/')
 
 
 def login_view(request):
     if request.user.is_authenticated:
-        return HttpResponse("You are already logged in")
+        return redirect('/dashboard/')
     else:
         return render(request, 'dashboard/login.html')
 
@@ -31,10 +36,12 @@ def error_view(request):
     return render(request, 'dashboard/error.html')
 
 
-@login_required(login_url='/dashboard/login/')
 def logout_view(request):
-    logout(request)
-    return redirect('/dashboard/login/')
+    if request.user.is_authenticated:
+        logout(request)
+        return redirect('/dashboard/login/')
+    else:
+        return redirect('/dashboard/error/')
 
 
 def submit_login(request):
@@ -56,11 +63,12 @@ def confirm_register(request):
                 password=request.POST['password'],
                 first_name=request.POST['name'],
                 last_name=request.POST['surname'],
-                is_active=1,
+                is_active=0,
             )
             user.save()
-            send_email(user.email)
-
+            token = secrets.token_urlsafe(32)
+            sql.save_token(user.id, token)
+            send_email(user.email, DOMAIN_NAME + "dashboard/" + str(user.id) + "/confirm/" + token)
             return render(request, 'dashboard/register_confirmation.html')
         except Exception as ex:
             return redirect('/dashboard/register/', exception=ex)
@@ -68,14 +76,19 @@ def confirm_register(request):
         return redirect('/dashboard/error/')
 
 
-def confirm_email(request):
-    pass
+def confirm_email(request, user_id, token):
+    authentication = sql.check_token(user_id, token)
+    if authentication:
+        sql.activate_user(user_id)
+        return redirect('/dashboard/login')
+    else:
+        return redirect('/dashboard/error/')
 
 
-def send_email(email):
+def send_email(email, message):
     send_mail('Auto-email',
-              'Hello, this is automatic email',
-              'danylo.shyshla.knm.2018@lpnu.ua',
+              message,
+              'mail.safehouse@gmail.com',
               [email],
               fail_silently=False)
     return None
