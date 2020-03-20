@@ -1,27 +1,22 @@
 {% extends "./base.html" %}
 
 {% block body %}
-{#<form class="" action="{% url 'submit_login' %}" method="post">#}
-{#{% csrf_token %}#}
-{#      <input type="text" required name="email" placeholder="email">#}
-<div class="container-fluid justify-content-center p-5" style="max-width: 400px">
-    <div class="card card-small mb-4">
-      <div class="card-header border-bottom">
-        <h6 class="m-0">Login</h6>
-      </div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item px-3">
-          <form class="" action="{% url 'submit_login' %}" method="post">
+<div class="container-fluid justify-content-center align-bottom" style="max-width: 350px; text-align: center; margin-top: 10em">
+  <form class="" action="{% url 'submit_login' %}" method="post">
 {% csrf_token %}
 
-              <div class="input-group mb-3">
+      <h3>Login</h3>
+      <p>Please fill up the form to enter your account dashboard.</p>
+
+      <div class="input-group mb-3">
       <div class="input-group input-group-seamless">
         <span class="input-group-prepend">
           <span class="input-group-text">
             <i class="material-icons">person</i>
           </span>
         </span>
-        <input type="text" class="form-control" id="form1-username" placeholder="Username" required name="email"> </div>
+        <input type="text" class="form-control" id="form1-username" placeholder="Email" required name="email">
+      </div>
     </div>
 
    <div class="input-group mb-3">
@@ -35,13 +30,10 @@
       </div>
     </div>
 
-              <button type="submit" class="mb-2 btn btn-primary mr-2">Login</button>
-              <a type="button" class="mb-2 btn btn-primary mr-2" href="/dashboard/register">Register</a>
-{#               <button type="submit" name="Login">Login</button>#}
+      <button type="submit" class="mb-4 btn btn-primary mr-2 container-fluid">Login</button>
+
+      <p>New to safehouse? <a href="/dashboard/register">Create an account</a>.</p>
 
   </form>
-</li>
-</ul>
-</div>
 </div>
 {% endblock %}
