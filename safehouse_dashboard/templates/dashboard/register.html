@@ -6,42 +6,126 @@
   <form class="" action="{% url 'confirm_register' %}" method="post">
 {% csrf_token %}
 
-      <h3>Register</h3>
-      <p>Please fill up the form to create your account and get access to dashboard.</p>
+          <h3>Register</h3>
+          <p>Please fill up the form to create your account and get access to dashboard.</p>
 
-      <div class="input-group mb-3">
-            <input type="text" class="form-control" required name="name" placeholder="First Name">
-      </div>
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" required name="surname" placeholder="Last Name">
+          <div class="form-group">
+                <input type="text" class="form-control" id="Name" required name="name" placeholder="First Name">
+                <div class="invalid-feedback" id="formFeedback"></div>
+          </div>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="Surname" required name="surname" placeholder="Last Name">
+                <div class="invalid-feedback" id="formFeedbackSurname"></div>
+            </div>
+
+          <div class="form-group">
+          <div class="input-group input-group-seamless">
+            <span class="input-group-prepend">
+              <span class="input-group-text">
+                <i class="material-icons">person</i>
+              </span>
+            </span>
+            <input type="text" class="form-control" id="Email" placeholder="Email" required name="email">
+          </div>
+          <div class="valid-feedback">Email must be similar to the email@example.com</div>
         </div>
 
-      <div class="input-group mb-3">
-      <div class="input-group input-group-seamless">
-        <span class="input-group-prepend">
-          <span class="input-group-text">
-            <i class="material-icons">person</i>
-          </span>
-        </span>
-        <input type="text" class="form-control" id="form1-username" placeholder="Email" required name="email">
-      </div>
-    </div>
+       <div class="input-group mb-3">
+          <div class="input-group input-group-seamless">
+            <input type="password" class="form-control" id="form2-password" placeholder="Password" required name="password">
+            <span class="input-group-append">
+              <span class="input-group-text">
+                <i class="material-icons">lock</i>
+              </span>
+            </span>
+          </div>
+          <div class="feedback mt-3" style="font-weight: 200;">*Note that password must consist of at least 6 characters and have at lest one uppercase, one lowercase letters and one number.</div>
+        </div>
+          <button type="submit" id="Register" class="mb-4 btn btn-primary mr-2 container-fluid">Register</button>
 
-   <div class="input-group mb-3">
-      <div class="input-group input-group-seamless">
-        <input type="password" class="form-control" id="form2-password" placeholder="Password" required name="password">
-        <span class="input-group-append">
-          <span class="input-group-text">
-            <i class="material-icons">lock</i>
-          </span>
-        </span>
-      </div>
-    </div>
-
-      <button type="submit" class="mb-4 btn btn-primary mr-2 container-fluid">Register</button>
-
-      <p>Have already an account? Click here to <a href="/dashboard/login">Login</a>.</p>
+          <p>Have already an account? Click here to <a href="/dashboard/login">Login</a>.</p>
 
   </form>
 </div>
+    <script type="text/javascript">
+      console.log("JS working !");
+
+    document.getElementById("Name").onchange = function() {emptyNameValidation()};
+
+    function emptyNameValidation() {
+      let e = document.getElementById("Name").value;
+      let element = document.getElementById('Name')
+      let regex = /^\d+$/;
+      element.classList.remove("is-valid", "is-invalid");
+
+       if (!e.match(regex)) {
+          element.classList.add("is-valid");
+        }
+      else {
+        element.classList.add("is-invalid");
+        document.getElementById("formFeedback").innerHTML = "Please fill up letters only";
+      }
+
+      if (e == null || e == "") {
+        element.classList.add("is-invalid");
+        document.getElementById("formFeedback").innerHTML = "The field can not be empty";
+      }
+    }
+
+    document.getElementById("Surname").onchange = function() {emptySurnameValidation()};
+
+    function emptySurnameValidation() {
+      let e = document.getElementById("Surname").value;
+      let element = document.getElementById('Surname')
+      let regex = /^\d+$/;
+      element.classList.remove("is-valid", "is-invalid");
+
+       if (!e.match(regex)) {
+          element.classList.add("is-valid");
+        }
+      else {
+        element.classList.add("is-invalid");
+        document.getElementById("formFeedbackSurname").innerHTML = "Please fill up letters only";
+      }
+
+      if (e == null || e == "") {
+        element.classList.add("is-invalid");
+        document.getElementById("formFeedbackSurname").innerHTML = "The field can not be empty";
+      }
+    }
+
+    document.getElementById("Email").onchange = function() {mailValidation()};
+
+    function mailValidation() {
+      let mailValue = document.getElementById("Email").value;
+      let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      let emailId = document.getElementById('Email');
+      emailId.classList.remove("is-valid", "is-invalid");
+
+      if (mailValue.match(emailPattern)) {
+        emailId.classList.add("is-valid");
+      }
+      else {
+        emailId.classList.add("is-invalid");
+      }
+    }
+
+    document.getElementById("form2-password").onchange = function() {passwordValidation()};
+
+    function passwordValidation() {
+      let strongPasswordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{6,})/;
+      let passwordValue = document.getElementById("form2-password").value;
+      let passwordId = document.getElementById("form2-password");
+      passwordId.classList.remove("is-valid", "is-invalid");
+
+      if (passwordValue.match(strongPasswordPattern)) {
+          passwordId.classList.add("is-valid");
+      }
+      else {
+          passwordId.classList.add("is-invalid");
+      }
+    }
+
+
+    </script>
 {% endblock %}
