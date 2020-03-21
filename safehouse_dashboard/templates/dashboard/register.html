@@ -55,10 +55,10 @@
     function emptyNameValidation() {
       let e = document.getElementById("Name").value;
       let element = document.getElementById('Name')
-      let regex = /^\d+$/;
+      let regex = /^[A-Za-z]+$/;
       element.classList.remove("is-valid", "is-invalid");
 
-       if (!e.match(regex)) {
+       if (e.match(regex)) {
           element.classList.add("is-valid");
         }
       else {
@@ -77,10 +77,10 @@
     function emptySurnameValidation() {
       let e = document.getElementById("Surname").value;
       let element = document.getElementById('Surname')
-      let regex = /^\d+$/;
+      let regex = /^[A-Za-z]+$/;
       element.classList.remove("is-valid", "is-invalid");
 
-       if (!e.match(regex)) {
+       if (e.match(regex)) {
           element.classList.add("is-valid");
         }
       else {
