@@ -11,4 +11,6 @@ urlpatterns = [
     path('<int:user_id>/confirm/<str:token>', views.confirm_email, name='confirm_email'),
     path('logout/', views.logout_view, name='logout_view'),
     path('error/', views.error_view, name='error_view'),
+    path('test/', views.test_view, name='test_view'),
+
 ]

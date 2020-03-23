@@ -1,4 +1,6 @@
 import secrets
+
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import logout, authenticate, login
 from django.shortcuts import redirect
@@ -56,22 +58,25 @@ def submit_login(request):
 
 def confirm_register(request):
     if request.method == 'POST':
-        try:
-            user = User.objects.create_user(
-                username=request.POST['email'],
-                email=request.POST['email'],
-                password=request.POST['password'],
-                first_name=request.POST['name'],
-                last_name=request.POST['surname'],
-                is_active=0,
-            )
-            user.save()
-            token = secrets.token_urlsafe(32)
-            sql.save_token(user.id, token)
-            send_email(user.email, DOMAIN_NAME + "dashboard/" + str(user.id) + "/confirm/" + token)
-            return render(request, 'dashboard/register_confirmation.html')
-        except Exception as ex:
-            return redirect('/dashboard/register/', exception=ex)
+        # try:
+        user = User.objects.create_user(
+            username=request.POST['email'],
+            email=request.POST['email'],
+            password=request.POST['password'],
+            first_name=request.POST['name'],
+            last_name=request.POST['surname'],
+            is_active=0,
+        )
+        user.save()
+        house = sql.create_house()
+        sql.create_user_has_house(user.id, house)
+        sql.set_default_house(user.id, house)
+        token = secrets.token_urlsafe(32)
+        sql.save_token(user.id, token)
+        send_email(user.email, DOMAIN_NAME + "dashboard/" + str(user.id) + "/confirm/" + token)
+        return render(request, 'dashboard/register_confirmation.html')
+        # except Exception as ex:
+        #     return redirect('/dashboard/register/', exception=ex)
     else:
         return redirect('/dashboard/error/')
 
@@ -92,3 +97,11 @@ def send_email(email, message):
               [email],
               fail_silently=False)
     return None
+
+
+def test_view(request):
+    # valve_id = sql.create_valve(1, "Gas valve", 1, 1)
+    # sql.create_sensor(1, "Gas sensor", 1, 1, valve_id)
+    sensors = sql.get_house_sensors(2)
+    valves = sql.get_house_valves(2)
+    return HttpResponse(str(sensors)+"\n\n"+str(valves))
