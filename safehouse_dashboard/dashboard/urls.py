@@ -1,5 +1,6 @@
 from django.urls import path
 
+
 from . import views
 
 urlpatterns = [
@@ -11,6 +12,6 @@ urlpatterns = [
     path('<int:user_id>/confirm/<str:token>', views.confirm_email, name='confirm_email'),
     path('logout/', views.logout_view, name='logout_view'),
     path('error/', views.error_view, name='error_view'),
-    path('test/', views.test_view, name='test_view'),
-
+    path('test/', views.get_senors_and_valves, name='get_senors_and_valves'),
+    path('update/', views.update_sensors_and_valves, name='update_sensors_and_valves'),
 ]

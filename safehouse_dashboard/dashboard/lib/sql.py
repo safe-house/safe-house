@@ -68,27 +68,30 @@ def get_default_house(user_id):
         return house_id
 
 
-def get_house_sensors(user_id):
+def get_house_sensors(house_id):
     with connection.cursor() as cursor:
-        house_id = get_default_house(user_id)
-        cursor.execute("SELECT id, location, name, house_id, type, valve FROM sensor WHERE house_id=%s", [house_id[0]])
-        sensors = cursor.fetchall()
+        cursor.execute("SELECT id, location, name, house_id, type, valve FROM sensor WHERE house_id=%s", [house_id])
+        sensors = [
+            {'id': col1, 'location': col2, 'name': col3, 'house_id': col4, 'type': col5, "valve": col6,}
+            for (col1, col2, col3, col4, col5, col6) in cursor.fetchall()]
         return sensors
 
 
-def get_house_valves(user_id):
+def get_house_valves(house_id):
     with connection.cursor() as cursor:
-        house_id = get_default_house(user_id)
         cursor.execute("SELECT id, location, name, house_id, type, closed, last_updated FROM valve WHERE house_id=%s",
-                       [house_id[0]])
-        valves = cursor.fetchall()
+                       [house_id])
+        valves = [
+            {'id': col1, 'location': col2, 'name': col3, 'house_id': col4, 'type': col5, "closed": col6,
+             'last_updated': col7} for
+            (col1, col2, col3, col4, col5, col6, col7) in cursor.fetchall()]
         return valves
 
 
 def get_house_valves_update(house_id):
     with connection.cursor() as cursor:
         cursor.execute("SELECT id, closed, last_updated FROM valve WHERE house_id=%s",
-                       [house_id[0]])
+                       [house_id])
         valves = cursor.fetchall()
         return valves
 
@@ -96,6 +99,6 @@ def get_house_valves_update(house_id):
 def get_house_sensors_update(house_id):
     with connection.cursor() as cursor:
         cursor.execute("SELECT id, closed, last_updated FROM valve WHERE house_id=%s",
-                       [house_id[0]])
+                       [house_id])
         sensors = cursor.fetchall()
         return sensors
