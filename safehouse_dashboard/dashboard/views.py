@@ -12,11 +12,7 @@ from dashboard.lib import sql
 DOMAIN_NAME = "127.0.0.1:8000/"
 
 
-def dashboard_view(request):
-    if request.user.is_authenticated:
-        return render(request, 'dashboard/index.html')
-    else:
-        return redirect('/dashboard/login/')
+
 
 
 def login_view(request):
@@ -99,14 +95,28 @@ def send_email(email, message):
     return None
 
 
-def get_senors_and_valves(request):
+def dashboard_view(request):
     if request.user.is_authenticated:
         house_id = sql.get_default_house(request.user.id)
-        return render(request, 'dashboard/sensors_test.html',
+        return render(request, 'dashboard/index.html',
                       {'valves_list': sql.get_house_valves(house_id),
                        'sensors_list': sql.get_house_sensors(house_id),
                        'locations_list': ("", "Kitchen", "Bathroom", "Living room", "Dining room",
                                           "Bedroom", "Utility room", "Other")})
+    else:
+        return redirect('/dashboard/login/')
+
+
+# def get_senors_and_valves(request):
+#     if request.user.is_authenticated:
+#         house_id = sql.get_default_house(request.user.id)
+#         return render(request, 'dashboard/index.html',
+#                       {'valves_list': sql.get_house_valves(house_id),
+#                        'sensors_list': sql.get_house_sensors(house_id),
+#                        'locations_list': ("", "Kitchen", "Bathroom", "Living room", "Dining room",
+#                                           "Bedroom", "Utility room", "Other")})
+#     else:
+#         return redirect('/dashboard/login/')
 
 
 def update_sensors_and_valves(request):
