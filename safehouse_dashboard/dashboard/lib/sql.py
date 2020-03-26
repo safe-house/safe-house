@@ -23,10 +23,10 @@ def activate_user(user_id):
         cursor.execute("DELETE FROM authentication WHERE auth_user_id=%s", [user_id])
 
 
-def create_valve(location, valve_name, house_id, valve_type):
+def create_valve(location, valve_name, house_id, valve_type, uniq_token):
     with connection.cursor() as cursor:
-        cursor.execute("INSERT INTO valve(location, name, house_id, type) VALUES(%s, %s, %s, %s)",
-                       [location, valve_name, house_id, valve_type])
+        cursor.execute("INSERT INTO valve(location, name, house_id, type, uniq_token) VALUES(%s, %s, %s, %s, %s)",
+                       [location, valve_name, house_id, valve_type, uniq_token])
     valve_id = cursor.lastrowid
     return valve_id
 
@@ -72,7 +72,7 @@ def get_house_sensors(house_id):
     with connection.cursor() as cursor:
         cursor.execute("SELECT id, location, name, house_id, type, valve FROM sensor WHERE house_id=%s", [house_id])
         sensors = [
-            {'id': col1, 'location': col2, 'name': col3, 'house_id': col4, 'type': col5, "valve": col6,}
+            {'id': col1, 'location': col2, 'name': col3, 'house_id': col4, 'type': col5, "valve": col6, }
             for (col1, col2, col3, col4, col5, col6) in cursor.fetchall()]
         return sensors
 
@@ -102,3 +102,10 @@ def get_house_sensors_update(house_id):
                        [house_id])
         sensors = cursor.fetchall()
         return sensors
+
+
+def get_locations():
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT id, location FROM location")
+        locations = cursor.fetchall()
+        return locations

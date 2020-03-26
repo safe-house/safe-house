@@ -12,9 +12,6 @@ from dashboard.lib import sql
 DOMAIN_NAME = "127.0.0.1:8000/"
 
 
-
-
-
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('/dashboard/')
@@ -127,3 +124,21 @@ def update_sensors_and_valves(request):
         return JsonResponse(response)
     else:
         raise Http404
+
+
+def create_valve_confirm(request):
+    if request.user.is_authenticated and request.method == 'POST':
+        try:
+            name = request.POST['name']
+            location = request.POST['location']
+            token = secrets.token_urlsafe(4)
+            locations_dict = {"Kitchen": 1, "Bathroom": 2, "Living room": 3, "Dining room": 4,
+                              "Bedroom": 5, "Utility room": 6, "Other": 7}
+            sql.create_valve(locations_dict[location], name, sql.get_default_house(request.user.id), 1, token)
+            return HttpResponse(token)
+        except Exception as ex:
+            return redirect('/dashboard/', exception=ex)
+
+
+def create_valve(request):
+    return render(request, "dashboard/create_valve.html", {"locations": sql.get_locations()})
