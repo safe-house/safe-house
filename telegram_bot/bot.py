@@ -1,8 +1,10 @@
 import logging
+
+from mysql.connector.cursor import MySQLCursorPrepared
 from telegram import ReplyKeyboardMarkup
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
                           ConversationHandler)
-
+import mysql.connector
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -13,15 +15,27 @@ valve_state = True
 VALVE = range(1)
 
 
-def start(update, context):
-    reply_keyboard = [['Close Valve', 'Sensors State']]
-    update.message.reply_text(
-        'Hi!\n\n'
-        'This is SafeHouse Bot.\n\n'
-        'I will send you notifications in case something happen in your House.',
-        reply_markup=ReplyKeyboardMarkup(reply_keyboard))
 
-    return VALVE
+
+
+def start(update, context):
+    username = update.message.chat.username
+    user_name = update.message.chat.first_name
+    if check_username(username):
+        reply_keyboard = [['Close Valve', 'Sensors State']]
+        update.message.reply_text(
+            'Hi ' + user_name + ',\n\n'
+            'This is SafeHouse Bot.\n\n'
+            'I will send you notifications in case something happens in your House.',
+            reply_markup=ReplyKeyboardMarkup(reply_keyboard))
+
+        return VALVE
+    else:
+        update.message.reply_text(
+            'Hi ' + user_name + ',\n\n'
+                                'This is SafeHouse Bot.\n\n'
+                                'You are not authorized')
+        return VALVE
 
 
 def rotate_valve(update, context):
@@ -70,11 +84,21 @@ def sensors_state(update, context):
 
 
 def help(update, context):
-    update.message.reply_text(
-        'Hi!\n\n'
-        'This is SafeHouse Bot.\n\n'
-        'I will send you notifications in case something happen in your House.')
-
+    username = update.message.chat.username
+    user_name = update.message.chat.first_name
+    # sql.check.in.db
+    list = ["@ostap_kuch", "danylo_shyshla"]
+    if user_name in list:
+        update.message.reply_text(
+            'Hi' + username + ',\n\n'
+            'This is SafeHouse Bot.\n\n'
+            'I will send you notifications in case something happen in your House.')
+    else:
+        update.message.reply_text(
+            'Hi ' + user_name + ',\n\n'
+                                'This is SafeHouse Bot.\n\n'
+                                'You are not authorized')
+        return VALVE
 
 def error(update, context):
     """Log Errors caused by Updates."""
@@ -87,10 +111,10 @@ def main():
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start)],
+        entry_points=[CommandHandler('start', start, Filters.user(username="@ostap_kuch"))],
 
         states={
-            VALVE: [MessageHandler(Filters.regex('^(Close Valve|Open Valve)$'), valve_ver),
+            VALVE: [MessageHandler(Filters.regex('^(Close Valve|Open Valve)$'),  valve_ver),
                     MessageHandler(Filters.regex('^(Sensors State)$'), sensors_state),
                     MessageHandler(Filters.regex('^(Yes)$'), rotate_valve),
                     MessageHandler(Filters.regex('^(Cancel)$'), cancel)],
