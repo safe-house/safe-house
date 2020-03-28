@@ -109,3 +109,32 @@ def get_locations():
         cursor.execute("SELECT id, location FROM location")
         locations = cursor.fetchall()
         return locations
+
+
+def add_telegram_bot(username, house_id, user_id):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT house_id FROM telegram_bot WHERE auth_user_id=%s and house_id=%s", [user_id, house_id])
+        if not cursor.fetchone():
+            cursor.execute("INSERT into telegram_bot(nickname, house_id, auth_user_id) VALUES(%s, %s, %s)",
+                       [username, house_id, user_id])
+
+
+def get_telegram_users(house_id):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT telegram_bot.auth_user_id, auth_user.first_name, auth_user.last_name, "
+                       "telegram_bot.nickname "
+                       "FROM telegram_bot "
+                       "INNER JOIN auth_user "
+                       "ON auth_user.id=telegram_bot.auth_user_id "
+                       "WHERE house_id=%s", [house_id])
+        return cursor.fetchall()
+
+
+def get_house_users(house_id):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT auth_user_id, first_name, last_name "
+                       "FROM auth_user_has_house "
+                       "INNER JOIN auth_user "
+                       "ON auth_user_has_house.auth_user_id=auth_user.id  "
+                       "WHERE auth_user_has_house.house_id=%s", [house_id])
+        return cursor.fetchall()

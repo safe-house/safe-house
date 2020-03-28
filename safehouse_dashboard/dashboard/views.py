@@ -24,7 +24,8 @@ def register_view(request):
 
 
 def register_confirmation_view(request):
-    return render(request, 'dashboard/register_confirmation.html')
+    if request.method == 'POST':
+        return render(request, 'dashboard/register_confirmation.html')
 
 
 def error_view(request):
@@ -39,7 +40,7 @@ def logout_view(request):
         return redirect('/dashboard/error/')
 
 
-def submit_login(request):
+def dashboard_login(request):
     if request.method == 'POST':
         user = authenticate(request, username=request.POST['email'], password=request.POST['password'])
         if user:
@@ -104,18 +105,6 @@ def dashboard_view(request):
         return redirect('/dashboard/login/')
 
 
-# def get_senors_and_valves(request):
-#     if request.user.is_authenticated:
-#         house_id = sql.get_default_house(request.user.id)
-#         return render(request, 'dashboard/index.html',
-#                       {'valves_list': sql.get_house_valves(house_id),
-#                        'sensors_list': sql.get_house_sensors(house_id),
-#                        'locations_list': ("", "Kitchen", "Bathroom", "Living room", "Dining room",
-#                                           "Bedroom", "Utility room", "Other")})
-#     else:
-#         return redirect('/dashboard/login/')
-
-
 def update_sensors_and_valves(request):
     if request.is_ajax() and request.user.is_authenticated:
         house_id = sql.get_default_house(request.user.id)
@@ -142,3 +131,21 @@ def create_valve_confirm(request):
 
 def create_valve(request):
     return render(request, "dashboard/create_valve.html", {"locations": sql.get_locations()})
+
+
+def add_user_to_telegram_bot(request):
+    house_id = sql.get_default_house(request.user.id)
+    return render(request, "dashboard/telegram_bot_add.html",
+                  {"users": sql.get_house_users(house_id),
+                   "telegram": sql.get_telegram_users(house_id)})
+
+
+def confirm_telegram(request):
+    if request.user.is_authenticated and request.method == 'POST':
+        try:
+            user_name = request.POST['username']
+            nickname = request.POST.get('user')
+            result = sql.add_telegram_bot(user_name, sql.get_default_house(request.user.id), nickname)
+            return redirect('/dashboard/telegram-bot/')
+        except Exception as ex:
+            return redirect('/dashboard/telegram-bot/', exception=ex)
