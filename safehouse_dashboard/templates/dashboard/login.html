@@ -2,7 +2,7 @@
 
 {% block body %}
 <div class="container-fluid justify-content-center align-bottom" style="max-width: 350px; text-align: center; margin-top: 10em">
-  <form class="" action="{% url 'submit_login' %}" method="post">
+  <form class="" action="{% url 'dashboard_login' %}" method="post">
 {% csrf_token %}
 
       <h3>Login</h3>
