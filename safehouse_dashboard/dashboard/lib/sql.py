@@ -111,12 +111,17 @@ def get_locations():
         return locations
 
 
-def add_telegram_bot(username, house_id, user_id):
+def create_telegram(username, house_id, user_id):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT house_id FROM telegram_bot WHERE auth_user_id=%s and house_id=%s", [user_id, house_id])
+        cursor.execute("SELECT house_id FROM telegram_bot WHERE auth_user_id=%s AND house_id=%s", [user_id, house_id])
         if not cursor.fetchone():
             cursor.execute("INSERT into telegram_bot(nickname, house_id, auth_user_id) VALUES(%s, %s, %s)",
                        [username, house_id, user_id])
+
+
+def delete_telegram(username, house_id):
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM telegram_bot WHERE nickname=%s AND house_id=%s", [username, house_id])
 
 
 def get_telegram_users(house_id):
@@ -138,3 +143,10 @@ def get_house_users(house_id):
                        "ON auth_user_has_house.auth_user_id=auth_user.id  "
                        "WHERE auth_user_has_house.house_id=%s", [house_id])
         return cursor.fetchall()
+
+
+def delete_valve(valve_id):
+    with connection.cursor() as cursor:
+        #implement delete from valve log
+        #implement delete all sensors related to valve or restrict if exist
+        cursor.execute("DELETE FROM valve WHERE id=%s", [valve_id])

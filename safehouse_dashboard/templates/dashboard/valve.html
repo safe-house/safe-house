@@ -1,0 +1,56 @@
+{% extends "./dashboard_base.html" %}
+
+{% block main-content %}
+    <div class="container-fluid justify-content-center align-bottom"
+         style="max-width: 350px; text-align: center; margin-top: 10em">
+        <form class="" action="{% url 'create_new_valve' %}" method="post">
+            {% csrf_token %}
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="form-group">
+                        <input type="text" class="form-control" required name="name" placeholder="Valve Name">
+                        <div class="feedback" id="formFeedback"></div>
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" name="location">
+                            {% for location in locations %}
+                                <option selected="">{{ location.1 }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="invalid-feedback">Please select your state.</div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="mb-4 btn btn-primary mr-2 container-fluid">Add Valve</button>
+        </form>
+        <div class="card-body p-0 pb-3 text-center">
+            <table class="table mb-0">
+                <thead class="bg-light">
+                <tr>
+                    <th scope="col" class="border-0">Valve Name</th>
+                    <th scope="col" class="border-0">Location</th>
+                    <th scope="col" class="border-0">Actions</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                {% for valve in valves %}
+                    <tr>
+                        <form class="" action="{% url 'delete_valve' %}" method="post">
+                            {% csrf_token %}
+                            <td>{{ valve.name }}</td>
+                            <td>{{ valve.location }}</td>
+                            <td>
+                                <button type="submit" class="mb-4 btn btn-primary mr-2" name="id"
+                                        value="{{ valve.id }}">Delete
+                                </button>
+                            </td>
+                        </form>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

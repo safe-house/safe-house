@@ -12,6 +12,10 @@ from dashboard.lib import sql
 DOMAIN_NAME = "127.0.0.1:8000/"
 
 
+# ----------------------------------------------------------------------
+# page rendering functions
+# ----------------------------------------------------------------------
+
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('/dashboard/')
@@ -30,6 +34,11 @@ def register_confirmation_view(request):
 
 def error_view(request):
     return render(request, 'dashboard/error.html')
+
+
+# ----------------------------------------------------------------------
+# user creation, login, logout related functions
+# ----------------------------------------------------------------------
 
 
 def logout_view(request):
@@ -93,6 +102,11 @@ def send_email(email, message):
     return None
 
 
+# ----------------------------------------------------------------------
+# Dashboard related functions
+# ----------------------------------------------------------------------
+
+
 def dashboard_view(request):
     if request.user.is_authenticated:
         house_id = sql.get_default_house(request.user.id)
@@ -105,7 +119,7 @@ def dashboard_view(request):
         return redirect('/dashboard/login/')
 
 
-def update_sensors_and_valves(request):
+def update_dashboard(request):
     if request.is_ajax() and request.user.is_authenticated:
         house_id = sql.get_default_house(request.user.id)
         response = {"valves": sql.get_house_valves_update(house_id),
@@ -115,37 +129,72 @@ def update_sensors_and_valves(request):
         raise Http404
 
 
-def create_valve_confirm(request):
+# ----------------------------------------------------------------------
+# Valves related functions
+# ----------------------------------------------------------------------
+
+
+def valves_view(request):
+    if request.user.is_authenticated:
+        house_id = sql.get_default_house(request.user.id)
+        return render(request, "dashboard/valve.html",
+                      {"locations": sql.get_locations(),
+                       "valves": sql.get_house_valves(house_id)})
+
+
+def create_new_valve(request):
+    if request.user.is_authenticated and request.method == 'POST':
+        # try:
+        name = request.POST['name']
+        location = request.POST['location']
+        token = secrets.token_urlsafe(4)
+        locations_dict = {"Kitchen": 1, "Bathroom": 2, "Living room": 3, "Dining room": 4,
+                          "Bedroom": 5, "Utility room": 6, "Other": 7}
+        sql.create_valve(locations_dict[location], name, sql.get_default_house(request.user.id), 1, token)
+        return render(request, "dashboard/valve_instruction.html", {"token": token})
+        # except Exception as ex:
+        #     return redirect('/dashboard/', exception=ex)
+
+
+def delete_valve(request):
     if request.user.is_authenticated and request.method == 'POST':
         try:
-            name = request.POST['name']
-            location = request.POST['location']
-            token = secrets.token_urlsafe(4)
-            locations_dict = {"Kitchen": 1, "Bathroom": 2, "Living room": 3, "Dining room": 4,
-                              "Bedroom": 5, "Utility room": 6, "Other": 7}
-            sql.create_valve(locations_dict[location], name, sql.get_default_house(request.user.id), 1, token)
-            return HttpResponse(token)
+            valve_id = request.POST['id']
+            sql.delete_valve(valve_id)
+            return redirect('valves')
         except Exception as ex:
-            return redirect('/dashboard/', exception=ex)
+            return redirect('/dashboard/valves', exception=ex)
+
+# ----------------------------------------------------------------------
+# Telegram bot related functions
+# ----------------------------------------------------------------------
 
 
-def create_valve(request):
-    return render(request, "dashboard/create_valve.html", {"locations": sql.get_locations()})
+def telegram_notifications_view(request):
+    if request.user.is_authenticated:
+        house_id = sql.get_default_house(request.user.id)
+        return render(request, "dashboard/telegram_notification.html",
+                      {"users": sql.get_house_users(house_id),
+                       "telegram": sql.get_telegram_users(house_id)})
 
 
-def add_user_to_telegram_bot(request):
-    house_id = sql.get_default_house(request.user.id)
-    return render(request, "dashboard/telegram_bot_add.html",
-                  {"users": sql.get_house_users(house_id),
-                   "telegram": sql.get_telegram_users(house_id)})
-
-
-def confirm_telegram(request):
+def telegram_new_user(request):
     if request.user.is_authenticated and request.method == 'POST':
         try:
             user_name = request.POST['username']
             nickname = request.POST.get('user')
-            result = sql.add_telegram_bot(user_name, sql.get_default_house(request.user.id), nickname)
-            return redirect('/dashboard/telegram-bot/')
+            sql.create_telegram(user_name, sql.get_default_house(request.user.id), nickname)
+            return redirect('/dashboard/telegram_notification/')
         except Exception as ex:
-            return redirect('/dashboard/telegram-bot/', exception=ex)
+            return redirect('/dashboard/telegram_notification/', exception=ex)
+
+
+def telegram_delete_user(request):
+    if request.user.is_authenticated and request.method == 'POST':
+        try:
+            username = request.POST['username']
+            house_id = sql.get_default_house(request.user.id)
+            sql.delete_telegram(username, house_id)
+            return redirect('/dashboard/telegram_notification/')
+        except Exception as ex:
+            return redirect('/dashboard/telegram_notification/', exception=ex)

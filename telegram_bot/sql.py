@@ -15,6 +15,7 @@ def check_username(username):
         cursor = database.cursor()
         sql = "SELECT nickname FROM telegram_bot WHERE nickname=%s"
         cursor.execute(sql, [username])
+        database.close()
         return cursor.fetchall()
     except mysql.connector.Error as err:
         print("Something went wrong: {}".format(err))

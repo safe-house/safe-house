@@ -1,0 +1,21 @@
+{% extends "./dashboard_base.html" %}
+
+{% block main-content %}
+    <div class="row justify-content-center">
+        <div class="error">
+            <div class="error__content">
+                <h4>You have created a valve please follow instruction to connect device:</h4>
+                <li>Turn on valve</li>
+                <li>Connect to Wi-fi using smartphone or PC</li>
+                <li>Go to this <a href="#">page</a></li>
+                <li>On the page that appers enter your home Wi-fi SSID, password and this token
+                    <strong>{{ token }}</strong></li>
+                <li>Click safe button</li>
+                <li>Wait a few minutes, until valve appears on dashboard</li>
+                <a type="button" class="btn btn-accent btn-pill" href="/dashboard">← Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    </div>
+{% endblock %}

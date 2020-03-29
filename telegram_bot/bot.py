@@ -1,10 +1,11 @@
 import logging
-
+import sql
 from mysql.connector.cursor import MySQLCursorPrepared
 from telegram import ReplyKeyboardMarkup
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
                           ConversationHandler)
 import mysql.connector
+
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -15,18 +16,15 @@ valve_state = True
 VALVE = range(1)
 
 
-
-
-
 def start(update, context):
     username = update.message.chat.username
     user_name = update.message.chat.first_name
-    if check_username(username):
+    if sql.check_username(username):
         reply_keyboard = [['Close Valve', 'Sensors State']]
         update.message.reply_text(
             'Hi ' + user_name + ',\n\n'
-            'This is SafeHouse Bot.\n\n'
-            'I will send you notifications in case something happens in your House.',
+                                'This is SafeHouse Bot.\n\n'
+                                'I will send you notifications in case something happens in your House.',
             reply_markup=ReplyKeyboardMarkup(reply_keyboard))
 
         return VALVE
@@ -91,14 +89,15 @@ def help(update, context):
     if user_name in list:
         update.message.reply_text(
             'Hi' + username + ',\n\n'
-            'This is SafeHouse Bot.\n\n'
-            'I will send you notifications in case something happen in your House.')
+                              'This is SafeHouse Bot.\n\n'
+                              'I will send you notifications in case something happen in your House.')
     else:
         update.message.reply_text(
             'Hi ' + user_name + ',\n\n'
                                 'This is SafeHouse Bot.\n\n'
                                 'You are not authorized')
         return VALVE
+
 
 def error(update, context):
     """Log Errors caused by Updates."""
@@ -114,7 +113,7 @@ def main():
         entry_points=[CommandHandler('start', start, Filters.user(username="@ostap_kuch"))],
 
         states={
-            VALVE: [MessageHandler(Filters.regex('^(Close Valve|Open Valve)$'),  valve_ver),
+            VALVE: [MessageHandler(Filters.regex('^(Close Valve|Open Valve)$'), valve_ver),
                     MessageHandler(Filters.regex('^(Sensors State)$'), sensors_state),
                     MessageHandler(Filters.regex('^(Yes)$'), rotate_valve),
                     MessageHandler(Filters.regex('^(Cancel)$'), cancel)],
