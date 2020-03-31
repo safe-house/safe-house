@@ -38,11 +38,11 @@
                     <tr>
                         <form class="" action="{% url 'delete_valve' %}" method="post">
                             {% csrf_token %}
-                            <td>{{ valve.name }}</td>
-                            <td>{{ valve.location }}</td>
+                            <td>{{ valve.2 }}</td>
+                            <td>{{ valve.1 }}</td>
                             <td>
                                 <button type="submit" class="mb-4 btn btn-primary mr-2" name="id"
-                                        value="{{ valve.id }}">Delete
+                                        value="{{ valve.0 }}">Delete
                                 </button>
                             </td>
                         </form>

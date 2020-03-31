@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 valve_state = True
 VALVE = range(1)
-
+NOT_AUTHORISED = ',\n\n This is SafeHouse Bot.\n\n You are not authorized'
 
 def start(update, context):
     username = update.message.chat.username
@@ -30,72 +30,85 @@ def start(update, context):
         return VALVE
     else:
         update.message.reply_text(
-            'Hi ' + user_name + ',\n\n'
-                                'This is SafeHouse Bot.\n\n'
-                                'You are not authorized')
+            'Hi ' + user_name + NOT_AUTHORISED)
         return VALVE
 
 
 def rotate_valve(update, context):
-    global valve_state
-    if valve_state:
-        valve_state = False
-        reply_keyboard = [['Open Valve', 'Sensors State']]
-        update.message.reply_text('Valve was closed',
-                                  reply_markup=ReplyKeyboardMarkup(reply_keyboard))
-    else:
-        valve_state = True
-        reply_keyboard = [['Close Valve', 'Sensors State']]
-        update.message.reply_text('Valve was opened',
-                                  reply_markup=ReplyKeyboardMarkup(reply_keyboard))
+    if sql.check_username(update.message.chat.username):
+        global valve_state
+        if valve_state:
+            valve_state = False
+            reply_keyboard = [['Open Valve', 'Sensors State']]
+            update.message.reply_text('Valve was closed',
+                                      reply_markup=ReplyKeyboardMarkup(reply_keyboard))
+        else:
+            valve_state = True
+            reply_keyboard = [['Close Valve', 'Sensors State']]
+            update.message.reply_text('Valve was opened',
+                                      reply_markup=ReplyKeyboardMarkup(reply_keyboard))
 
-    return VALVE
+        return VALVE
+    else:
+        update.message.reply_text(
+            'Hi ' + update.message.chat.first_name + NOT_AUTHORISED)
+        return VALVE
 
 
 def valve_ver(update, context):
-    if valve_state:
-        reply_keyboard = [['Yes', 'Cancel']]
-        update.message.reply_text('Do you really want to close valve?',
-                                  reply_markup=ReplyKeyboardMarkup(reply_keyboard))
-    else:
-        reply_keyboard = [['Yes', 'Cancel']]
-        update.message.reply_text('Do you really want to open valve?',
-                                  reply_markup=ReplyKeyboardMarkup(reply_keyboard))
+    if sql.check_username(update.message.chat.username):
+        if valve_state:
+            reply_keyboard = [['Yes', 'Cancel']]
+            update.message.reply_text('Do you really want to close valve?',
+                                      reply_markup=ReplyKeyboardMarkup(reply_keyboard))
+        else:
+            reply_keyboard = [['Yes', 'Cancel']]
+            update.message.reply_text('Do you really want to open valve?',
+                                      reply_markup=ReplyKeyboardMarkup(reply_keyboard))
 
-    return VALVE
+        return VALVE
+    else:
+        update.message.reply_text(
+            'Hi ' + update.message.chat.first_name + NOT_AUTHORISED)
+        return VALVE
 
 
 def cancel(update, context):
-    if valve_state:
-        reply_keyboard = [['Close Valve', 'Sensors State']]
-        update.message.reply_text('Cancelled', reply_markup=ReplyKeyboardMarkup(reply_keyboard))
+    if sql.check_username(update.message.chat.username):
+        if valve_state:
+            reply_keyboard = [['Close Valve', 'Sensors State']]
+            update.message.reply_text('Cancelled', reply_markup=ReplyKeyboardMarkup(reply_keyboard))
+        else:
+            reply_keyboard = [['Open Valve', 'Sensors State']]
+            update.message.reply_text('Cancelled', reply_markup=ReplyKeyboardMarkup(reply_keyboard))
+        return VALVE
     else:
-        reply_keyboard = [['Open Valve', 'Sensors State']]
-        update.message.reply_text('Cancelled', reply_markup=ReplyKeyboardMarkup(reply_keyboard))
-    return VALVE
+        update.message.reply_text(
+            'Hi ' + update.message.chat.first_name + NOT_AUTHORISED)
+        return VALVE
 
 
 def sensors_state(update, context):
-    update.message.reply_text('Kitchen: Good, Last seen: 2 min ago \n\n Bathroom: Good, Last seen: 3 min ago')
-
-    return VALVE
+    if sql.check_username(update.message.chat.username):
+        update.message.reply_text('Kitchen: Good, Last seen: 2 min ago \n\n Bathroom: Good, Last seen: 3 min ago')
+        return VALVE
+    else:
+        update.message.reply_text(
+            'Hi ' + update.message.chat.first_name + NOT_AUTHORISED)
+        return VALVE
 
 
 def help(update, context):
-    username = update.message.chat.username
-    user_name = update.message.chat.first_name
-    # sql.check.in.db
-    list = ["@ostap_kuch", "danylo_shyshla"]
-    if user_name in list:
+    name = update.message.chat.first_name
+    if sql.check_username(update.message.chat.username):
+
         update.message.reply_text(
-            'Hi' + username + ',\n\n'
+            'Hi' + name + ',\n\n'
                               'This is SafeHouse Bot.\n\n'
                               'I will send you notifications in case something happen in your House.')
     else:
         update.message.reply_text(
-            'Hi ' + user_name + ',\n\n'
-                                'This is SafeHouse Bot.\n\n'
-                                'You are not authorized')
+            'Hi ' + name + NOT_AUTHORISED)
         return VALVE
 
 
