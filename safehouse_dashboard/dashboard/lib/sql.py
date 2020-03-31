@@ -25,19 +25,27 @@ def activate_user(user_id):
 
 def create_valve(location, valve_name, house_id, valve_type, uniq_token):
     with connection.cursor() as cursor:
-        cursor.execute("INSERT INTO valve(location, name, house_id, type, uniq_token) VALUES(%s, %s, %s, %s, %s)",
-                       [location, valve_name, house_id, valve_type, uniq_token])
+        cursor.execute(
+            "INSERT INTO valve(location, name, house_id, type, uniq_token) "
+            "VALUES(%s, %s, %s, %s, %s)",
+            [location, valve_name, house_id, valve_type, uniq_token])
     valve_id = cursor.lastrowid
     return valve_id
 
 
-def create_sensor(location, sensor_name, house_id, sensor_type, valve_id):
+def create_sensor(sensor_name, house_id, sensor_type, valve_id, code, last_updated, value):
     with connection.cursor() as cursor:
-        cursor.execute("INSERT INTO sensor(location, name, house_id, type, valve) VALUES(%s, %s, %s, %s, %s)",
-                       [location, sensor_name, house_id, sensor_type, valve_id])
-        sensor_id = cursor.lastrowid
-        cursor.execute("INSERT INTO sensor_state(sensor_id) VALUES(%s)",
-                       [sensor_id])
+        cursor.execute("SELECT id FROM sensor where sensor_code=%s", [code])
+        sensor = cursor.fetchone()
+        if sensor:
+            cursor.execute("UPDATE sensor_state SET last_seen=%s, last_data=%s WHERE sensor_id=%s",
+                           [sensor[0], last_updated, value])
+        else:
+            cursor.execute("INSERT INTO sensor(name, house_id, type, valve, sensor_code) VALUES(%s, %s, %s, %s, %s)",
+                           [sensor_name, house_id, sensor_type, valve_id, code])
+            sensor_id = cursor.lastrowid
+            cursor.execute("INSERT INTO sensor_state(sensor_id, last_seen, last_data) VALUES(%s, %s, %s)",
+                           [sensor_id, last_updated, value])
 
 
 def create_house():
@@ -70,22 +78,18 @@ def get_default_house(user_id):
 
 def get_house_sensors(house_id):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT id, location, name, house_id, type, valve FROM sensor WHERE house_id=%s", [house_id])
-        sensors = [
-            {'id': col1, 'location': col2, 'name': col3, 'house_id': col4, 'type': col5, "valve": col6, }
-            for (col1, col2, col3, col4, col5, col6) in cursor.fetchall()]
-        return sensors
+        cursor.execute("SELECT sensor.id, name, valve, last_seen, last_data FROM sensor "
+                       "INNER JOIN sensor_state ON sensor.id=sensor_state.sensor_id "
+                       "WHERE sensor.house_id=%s", [house_id])
+        return cursor.fetchall()
 
 
 def get_house_valves(house_id):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT id, location, name, house_id, type, closed, last_updated FROM valve WHERE house_id=%s",
+        cursor.execute("SELECT id, location, name, house_id, type, closed, last_updated "
+                       "FROM valve WHERE house_id=%s AND active=1",
                        [house_id])
-        valves = [
-            {'id': col1, 'location': col2, 'name': col3, 'house_id': col4, 'type': col5, "closed": col6,
-             'last_updated': col7} for
-            (col1, col2, col3, col4, col5, col6, col7) in cursor.fetchall()]
-        return valves
+        return cursor.fetchall()
 
 
 def get_house_valves_update(house_id):
@@ -98,7 +102,7 @@ def get_house_valves_update(house_id):
 
 def get_house_sensors_update(house_id):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT id, closed, last_updated FROM valve WHERE house_id=%s",
+        cursor.execute("SELECT id, last_updated FROM valve WHERE house_id=%s",
                        [house_id])
         sensors = cursor.fetchall()
         return sensors
@@ -116,7 +120,7 @@ def create_telegram(username, house_id, user_id):
         cursor.execute("SELECT house_id FROM telegram_bot WHERE auth_user_id=%s AND house_id=%s", [user_id, house_id])
         if not cursor.fetchone():
             cursor.execute("INSERT into telegram_bot(nickname, house_id, auth_user_id) VALUES(%s, %s, %s)",
-                       [username, house_id, user_id])
+                           [username, house_id, user_id])
 
 
 def delete_telegram(username, house_id):
@@ -147,6 +151,35 @@ def get_house_users(house_id):
 
 def delete_valve(valve_id):
     with connection.cursor() as cursor:
-        #implement delete from valve log
-        #implement delete all sensors related to valve or restrict if exist
+        # implement deletion of sensors statistics
+        cursor.execute("DELETE FROM valve_log WHERE valve_id=%s", [valve_id])
+        cursor.execute("SELECT id FROM sensor WHERE valve=%s", [valve_id])
+        sensors = cursor.fetchall()
+        for sensor in sensors:
+            print(sensor[0])
+            cursor.execute("DELETE FROM sensor_state WHERE sensor_id=%s", [sensor[0]])
+        cursor.execute("DELETE FROM sensor WHERE valve=%s", [valve_id])
         cursor.execute("DELETE FROM valve WHERE id=%s", [valve_id])
+
+
+def activate_valve(token):
+    with connection.cursor() as cursor:
+        cursor.execute("UPDATE valve SET active=1, last_updated=current_timestamp() WHERE uniq_token=%s", [token])
+        cursor.execute("SELECT id, house_id FROM valve WHERE uniq_token=%s", [token])
+        return cursor.fetchone()
+
+
+def update_valve(token, closed):
+    with connection.cursor() as cursor:
+        cursor.execute("UPDATE valve SET closed=%s, last_updated=current_timestamp() WHERE uniq_token=%s",
+                       [closed, token])
+
+
+def update_sensor(last_updated, value, code):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT id FROM sensor where sensor_code=%s", [code])
+        sensor = cursor.fetchone()
+        print(sensor[0])
+        if sensor:
+            cursor.execute("UPDATE sensor_state SET last_seen=%s, last_data=%s WHERE sensor_id=%s",
+                           [last_updated, value, sensor[0]])
