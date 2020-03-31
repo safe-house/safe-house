@@ -1,5 +1,6 @@
 import secrets
 import json
+
 from django.http import HttpResponse, JsonResponse, Http404
 from django.shortcuts import render
 from django.contrib.auth import logout, authenticate, login
@@ -8,7 +9,7 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
 
-from dashboard.lib import sql
+from dashboard.lib import sql, telegram
 
 DOMAIN_NAME = "127.0.0.1:8000/"
 
@@ -211,6 +212,7 @@ def telegram_delete_user(request):
 #     "closed": 1,
 #     "type": 2,
 #     "new_request": 0,
+#     "leakage": 0,
 #     "sensors": [{
 #     	"sensor": "2k4523",
 #     	"value": "1111",
@@ -252,8 +254,14 @@ def api_update(request, token):
                 sql.create_sensor(sensor_names, valve[1], sensor_type, valve[0], sensor['sensor'],
                                   sensor['last_updated'], sensor['value'])
         else:
+            if json_data['leakage']:
+                telegram.send_message("leakage", 430168070)
             sql.update_valve(token, json_data['closed'])
             for sensor in json_data['sensors']:
                 sql.update_sensor(sensor['last_updated'], sensor['value'], sensor['sensor'])
         # except Exception as ex:
         return HttpResponse("true")
+
+
+
+

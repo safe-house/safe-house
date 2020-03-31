@@ -89,8 +89,17 @@ def cancel(update, context):
 
 
 def sensors_state(update, context):
-    if sql.check_username(update.message.chat.username):
-        update.message.reply_text('Kitchen: Good, Last seen: 2 min ago \n\n Bathroom: Good, Last seen: 3 min ago')
+    username = update.message.chat.username
+    if sql.check_username(username):
+        sensors = sql.sensors_state(username)
+        text = ""
+        for sensor in sensors:
+            print(1222)
+            text += str(sensor[1]) + ". \n\n Last update: " + str(sensor[3]) + "\n\n Value: " + str(sensor[4]) + "\n\n \n\n"
+        update.message.reply_text(text
+
+            # 'Kitchen: Good, Last seen: 2 min ago \n\n Bathroom: Good, Last seen: 3 min ago'
+        )
         return VALVE
     else:
         update.message.reply_text(
