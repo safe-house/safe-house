@@ -16,10 +16,13 @@ valve_state = True
 VALVE = range(1)
 NOT_AUTHORISED = ',\n\n This is SafeHouse Bot.\n\n You are not authorized'
 
+
 def start(update, context):
     username = update.message.chat.username
     user_name = update.message.chat.first_name
+    chat_id = update.message.chat.id
     if sql.check_username(username):
+        sql.insert_chat_id(chat_id, username)
         reply_keyboard = [['Close Valve', 'Sensors State']]
         update.message.reply_text(
             'Hi ' + user_name + ',\n\n'
@@ -132,7 +135,7 @@ def main():
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start, Filters.user(username="@ostap_kuch"))],
+        entry_points=[CommandHandler('start', start)],
 
         states={
             VALVE: [MessageHandler(Filters.regex('^(Close Valve|Open Valve)$'), valve_ver),

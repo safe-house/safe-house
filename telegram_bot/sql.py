@@ -1,7 +1,7 @@
 import mysql.connector
 
 
-def database(query, params):
+def database(query, params, fetch=True):
     try:
         connection = mysql.connector.connect(
             host="localhost",
@@ -14,8 +14,11 @@ def database(query, params):
         cursor = connection.cursor()
         # print(str(params))
         cursor.execute(query, params)
-        return cursor.fetchall()
-    except mysql.connector.Error as err:
+        if fetch:
+            return cursor.fetchall()
+        else:
+            connection.commit()
+    except mysql as err:
         print("Something went wrong: {}".format(err))
     finally:
         if connection.is_connected():
@@ -44,3 +47,9 @@ def sensors_state(username):
 #                        "INNER JOIN sensor_state ON sensor.id=sensor_state.sensor_id "
 #                        "WHERE sensor.house_id=%s", [house_id])
 #         return cursor.fetchall()
+
+
+def insert_chat_id(chat_id, username):
+    print(username, chat_id)
+    sql = "UPDATE telegram_bot SET chat_id=%s WHERE nickname=%s"
+    database(sql, [chat_id, username], False)
