@@ -12,48 +12,71 @@
     <!-- End Page Header -->
     <div>
         {% for valve in valves_list %}
-            <div class="row" style="padding-left: 50px">
+            <div class="row">
                 {% csrf_token %}
-                <div class="card" name="valve" style="width: 180px; margin: 20px;">
-                    <p id="{{ valve.0 }}">
+                <div class="col-lg-3">
+                <div class="card card-small card-post mb-4" name="valve">
+                    <div class="card-body justify-content-center">
+                        <div class="d-flex flex-column m-auto">
+                            <div class="stats-small__data text-center" style="max-width: 100% !important;">
+                                <span class="stats-small__label text-uppercase"><a>Valve Name</a></span>
+                                <h6 class="stats-small__value count my-2"><a class="name card-title">{{ valve.2 }}</a></h6>
+                            </div>
+                        </div>
+{#                        <p class="card-text text-muted" id="{{ valve.0 }}">#}
 
-                        <br>
-                        Name: <a class="name">{{ valve.2 }}</a>
-                        <br>
-                        Location: <a class="location">{{ locations_list|get_value:valve.1 }}</a>
-                        <br>
+{#                        </p>#}
+                    </div>
 
-
-                        Type: <a class="type">{% if valve.4 %} Gas {% else %} Water {% endif %}</a>
-                        <br>
-                        <a class="closed">{% if valve.5 %} Closed {% else %} Open {% endif %} </a>
-                        <br>
-                        Last Update: <a class="last_update">{{ valve.6|date:"d M H\:i:s" }}</a>
-                    </p>
-
-
+                <div class="card-footer border-top d-flex">
+                    <div class="card-post__author d-flex">
+                      <a href="#" class="card-post__author-avatar card-post__author-avatar--small" style="background-image: url('/static/dashboard/images/icons/{% if valve.4 == "1"%}gas.png{% else %}water.png{% endif %}'); background-size: 50%; background-repeat: no-repeat"></a>
+                      <div class="d-flex flex-column justify-content-center ml-3">
+                        <span class="card-post__author-name"><a class="location">{{ locations_list|get_value:valve.1 }}</a></span>
+                        <small class="text-muted"><a class="last_update{{ valve.0 }}">{{ valve.6|date:"d M H\:i:s" }}</a></small>
+                      </div>
+                    </div>
+                    <div class="my-auto ml-auto">
+                      <div class="custom-control custom-toggle custom-toggle-sm mb-1">
+{#                          <a class="closed">{% if valve.5 %} Closed {% else %} Open {% endif %} </a>#}
+                          <input type="checkbox" id="customToggle{{ valve.0 }}" name="customToggle{{ valve.0 }}" class="custom-control-input" checked="checked">
+                          <label class="custom-control-label" for="customToggle{{ valve.0 }}"><a class="closed{{ valve.0 }}">{% if valve.5 %} Closed {% else %} Open {% endif %} </a></label>
+                      </div>
+                    </div>
+                </div>
+                </div>
                 </div>
 
                 {% for sensor in sensors_list %}
                     {% if sensor.2 == valve.0 %}
-                        <div class="card" name="sensor" style="width: 160px; margin: 20px;">
-                            <p id="{{ sensor.0 }}">
-
-                                <br>
-                                Name: <a class="name"> {{ sensor.1 }}</a>
-                                <br>
-                                Last Update: <a class="update"> {{ sensor.3|date:"d M H\:i:s" }}</a>
-                                <br>
-                                Value: <a class="value"> {{ sensor.4 }}</a>
-                                {#                                Location: <a#}
-                                {#                                    class="location">{{ locations_list|get_value:sensor.location }}</a>#}
-                                <br>
-
-                            </p>
+                        <div class="col-lg-2">
+                            <div class="card card-small card-post mb-4" name="sensor">
+                                <div class="card-body">
+                                    <div class="d-flex flex-column m-auto">
+                                        <div class="stats-small__data text-center" style="max-width: 100% !important;">
+                                            <span class="stats-small__label text-uppercase"><a name="type">{% if valve.4 == "1"%}Gas{% else %}Water{% endif %} Level</a></span>
+                                        <h6 class="stats-small__value count my-2"><a class="value{{ sensor.0 }}">{% if valve.4 == "1"%}{{ sensor.4 }}{% else %}Leakage{% endif %}</a></h6>
+                                      </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer border-top d-flex">
+                                    <div class="card-post__author d-flex">
+                                      <a href="#" class="card-post__author-avatar card-post__author-avatar--small" style="background-image: url('/static/dashboard/images/icons/sensor.png'); background-size: 50%; background-repeat: no-repeat"></a>
+                                      <div class="d-flex flex-column justify-content-center ml-3">
+                                        <span class="card-post__author-name"><a class="name">{{ sensor.1 }}</a></span>
+                                        <small class="text-muted"><a class="update{{ sensor.0 }}">{{ sensor.3|date:"d M H\:i:s" }}</a></small>
+                                      </div>
+                                    </div>
+                                    <div class="my-auto ml-auto">
+                                    </div>
+                                </div>
+{#                                <p id="{{ sensor.0 }}">#}
+{##}
+{#                                </p>#}
+                            </div>
                         </div>
                     {% endif %}
                 {% endfor %}
-
             </div>
         {% endfor %}
     </div>
@@ -84,7 +107,9 @@
                         const valves = data["valves"];
                         const sensors = data["sensors"];
                         for (var i = 1; i < valves.length + 1; i++) {
-                            var valve_state = $("#" + valves[i - 1][0]).children('a[class$="closed"]')
+                            {#var valve_state = $("#" + valves[i - 1][0]).children('a[class$="closed"]')#}
+                            var valve_state = $(".closed" + valves[i - 1][0])
+
                             if (valves[i - 1][1] === 1) {
 
                                 valve_state.text("Closed")
@@ -101,13 +126,16 @@
                                 }
                                 var day = date.substring(8, 10);
                                 var time = date.substring(11);
-                                $("#" + valves[i - 1][0]).children('a[class$="last_update"]').text(day + " " + months[month - 1] + " " + time);
+                                {#$("#" + valves[i - 1][0]).children('a[class$="last_update"]').text(day + " " + months[month - 1] + " " + time);#}
+                                $(".last_update" + valves[i - 1][0]).text(day + " " + months[month - 1] + " " + time);
                             }
                         }
                         for (var i = 1; i < sensors.length + 1; i++) {
-                            var sensor_value = $("#" + sensors[i - 1][0]).children('a[class$="value"]')
+                            var sensor_type = $(".type" + sensors[i - 1][0]).text();
+                            console.log(sensor_type);
+                            var sensor_value = $(".value" + sensors[i - 1][0]);
 
-                            sensor_value.text(sensors[i - 1][4])
+                            sensor_value.text(sensors[i - 1][4]);
 
                             var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                                 "Jul", "Aug", "Sep", "Oct", "Now", "Dec"];
@@ -119,7 +147,7 @@
                                 }
                                 var day = date.substring(8, 10);
                                 var time = date.substring(11);
-                                $("#" + sensors[i - 1][0]).children('a[class$="update"]').text(day + " " + months[month - 1] + " " + time);
+                                $(".update" + sensors[i - 1][0]).text(day + " " + months[month - 1] + " " + time);
                             }
                         }
 
