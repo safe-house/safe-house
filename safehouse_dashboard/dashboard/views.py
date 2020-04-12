@@ -116,7 +116,8 @@ def dashboard_view(request):
                       {'valves_list': sql.get_house_valves(house_id),
                        'sensors_list': sql.get_house_sensors(house_id),
                        'locations_list': ("", "Kitchen", "Bathroom", "Living room", "Dining room",
-                                          "Bedroom", "Utility room", "Other")})
+                                          "Bedroom", "Utility room", "Other"),
+                       'user': request.user.first_name + " " + request.user.last_name})
     else:
         return redirect('/dashboard/login/')
 
@@ -255,7 +256,9 @@ def api_update(request, token):
                                   sensor['last_updated'], sensor['value'])
         else:
             if json_data['leakage']:
-                telegram.send_message("leakage", 430168070)
+                chats = sql.get_chat_id(token)
+                for chat_id in chats:
+                    telegram.send_message("Leakage!", chat_id)
             sql.update_valve(token, json_data['closed'])
             for sensor in json_data['sensors']:
                 sql.update_sensor(sensor['last_updated'], sensor['value'], sensor['sensor'])

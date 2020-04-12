@@ -183,3 +183,11 @@ def update_sensor(last_updated, value, code):
         if sensor:
             cursor.execute("UPDATE sensor_state SET last_seen=%s, last_data=%s WHERE sensor_id=%s",
                            [last_updated, value, sensor[0]])
+
+
+def get_chat_id(token):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT house_id FROM valve where uniq_token=%s", [token])
+        house = cursor.fetchone()
+        cursor.execute("SELECT chat_id FROM telegram_bot where house_id=%s", [house[0]])
+        return cursor.fetchall()
