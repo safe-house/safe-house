@@ -4,38 +4,62 @@
 
 
     <div class="row justify-content-center">
-        <div class="container">
-            <form class="" action="{% url 'telegram_new_user' %}" method="post">
-                {% csrf_token %}
-                <div class="row justify-content-center">
-                    <div class="form-group">
-                        <div class="row">
-                            <div><input type="text" class="form-control" required name="username"
-                                        placeholder="@username"></div>
-                            <div><select class="form-control" name="user">
-
-                                <option value="" disabled selected>Select user</option>
-                                {% for user in users %}
-                                    <option value="{{ user.0 }}">{{ user.1 }} {{ user.2 }}</option>
-                                {% endfor %}
-                            </select></div>
-
-                            <div>
-                                <button type="submit" class="mb-4 btn btn-primary mr-2 container-fluid">Save</button>
-                            </div>
-
-
-                        </div>
-                    </div>
-
-                </div>
-
-            </form>
+        <div class="container pt-5">
+{#            <form class="" action="{% url 'telegram_new_user' %}" method="post">#}
+{#                {% csrf_token %}#}
+{#                <div class="row justify-content-center">#}
+{#                    <div class="form-group">#}
+{#                        <div class="row">#}
+{#                            <div><input type="text" class="form-control" required name="username"#}
+{#                                        placeholder="@username"></div>#}
+{#                            <div><select class="form-control" name="user">#}
+{##}
+{#                                <option value="" disabled selected>Select user</option>#}
+{#                                {% for user in users %}#}
+{#                                    <option value="{{ user.0 }}">{{ user.1 }} {{ user.2 }}</option>#}
+{#                                {% endfor %}#}
+{#                            </select></div>#}
+{##}
+{#                            <div>#}
+{#                                <button type="submit" class="mb-4 btn btn-primary mr-2 container-fluid">Save</button>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </form>#}
             <div class="row">
                 <div class="col">
                     <div class="card card-small mb-4">
                         <div class="card-header border-bottom">
                             <h6 class="m-0">Active Users</h6>
+
+                            <form class="" action="{% url 'telegram_new_user' %}" method="post">
+                                {% csrf_token %}
+                                <div class="row justify-content-center">
+
+                                        <div class="row">
+                                            <div class="px-3">
+                                                <input type="text" class="form-control" required name="username" placeholder="@username">
+                                            </div>
+                                            <div class="px-3">
+                                                <select class="form-control" name="user">
+
+                                                <option value="" disabled selected>Select user</option>
+                                                {% for user in users %}
+                                                    <option value="{{ user.0 }}">{{ user.1 }} {{ user.2 }}</option>
+                                                {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <div class="px-3">
+                                                <button type="submit" class="mb-4 btn btn-primary mr-2 container-fluid">
+                                                    Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </form>
+
                         </div>
                         <div class="card-body p-0 pb-3 text-center">
                             <table class="table mb-0">
