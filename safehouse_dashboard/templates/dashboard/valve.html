@@ -29,6 +29,8 @@
                 <tr>
                     <th scope="col" class="border-0">Valve Name</th>
                     <th scope="col" class="border-0">Location</th>
+                    <th scope="col" class="border-0">Activated</th>
+                    <th scope="col" class="border-0">Token</th>
                     <th scope="col" class="border-0">Actions</th>
 
                 </tr>
@@ -40,6 +42,8 @@
                             {% csrf_token %}
                             <td>{{ valve.2 }}</td>
                             <td>{{ valve.1 }}</td>
+                            <td>{{ valve.7 }}</td>
+                            <td>{{ valve.8 }}</td>
                             <td>
                                 <button type="submit" class="mb-4 btn btn-primary mr-2" name="id"
                                         value="{{ valve.0 }}">Delete

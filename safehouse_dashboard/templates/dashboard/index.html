@@ -39,7 +39,7 @@
                     <div class="my-auto ml-auto">
                       <div class="custom-control custom-toggle custom-toggle-sm mb-1">
 {#                          <a class="closed">{% if valve.5 %} Closed {% else %} Open {% endif %} </a>#}
-                          <input type="checkbox" id="customToggle{{ valve.0 }}" name="customToggle{{ valve.0 }}" class="custom-control-input" checked="checked">
+                          <input type="checkbox" id="customToggle{{ valve.0 }}" name="customToggle{{ valve.0 }}" class="custom-control-input" {% if valve.5 %} disabled="disabled" {% else %} checked="checked" {% endif %} >
                           <label class="custom-control-label" for="customToggle{{ valve.0 }}"><a class="closed{{ valve.0 }}">{% if valve.5 %} Closed {% else %} Open {% endif %} </a></label>
                       </div>
                     </div>
@@ -109,13 +109,16 @@
                         for (var i = 1; i < valves.length + 1; i++) {
                             {#var valve_state = $("#" + valves[i - 1][0]).children('a[class$="closed"]')#}
                             var valve_state = $(".closed" + valves[i - 1][0])
-
+                            var toggle = $("#customToggle"  + valves[i - 1][0]);
                             if (valves[i - 1][1] === 1) {
-
+                                toggle.removeAttr("checked")
+                                toggle.attr("disabled","disabled");
                                 valve_state.text("Closed")
+                                {#console.log()#}
                             } else {
                                 valve_state.text("Open")
-                            }
+                                toggle.attr("checked","unchecked");
+                                toggle.removeAttr("disabled")                            }
                             var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                                 "Jul", "Aug", "Sep", "Oct", "Now", "Dec"];
                             var date = valves[i - 1][2];
