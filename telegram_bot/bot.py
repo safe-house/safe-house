@@ -98,11 +98,12 @@ def sensors_state(update, context):
         text = ""
         for sensor in sensors:
             print(1222)
-            text += str(sensor[1]) + ". \n\n Last update: " + str(sensor[3]) + "\n\n Value: " + str(sensor[4]) + "\n\n \n\n"
+            text += str(sensor[1]) + ". \n\n Last update: " + str(sensor[3]) + "\n\n Value: " + str(
+                sensor[4]) + "\n\n \n\n"
         update.message.reply_text(text
 
-            # 'Kitchen: Good, Last seen: 2 min ago \n\n Bathroom: Good, Last seen: 3 min ago'
-        )
+                                  # 'Kitchen: Good, Last seen: 2 min ago \n\n Bathroom: Good, Last seen: 3 min ago'
+                                  )
         return VALVE
     else:
         update.message.reply_text(
@@ -116,8 +117,8 @@ def help(update, context):
 
         update.message.reply_text(
             'Hi' + name + ',\n\n'
-                              'This is SafeHouse Bot.\n\n'
-                              'I will send you notifications in case something happen in your House.')
+                          'This is SafeHouse Bot.\n\n'
+                          'I will send you notifications in case something happen in your House.')
     else:
         update.message.reply_text(
             'Hi ' + name + NOT_AUTHORISED)

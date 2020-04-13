@@ -12,7 +12,6 @@ def database(query, params, fetch=True):
             auth_plugin='mysql_native_password'
         )
         cursor = connection.cursor()
-        # print(str(params))
         cursor.execute(query, params)
         if fetch:
             return cursor.fetchall()
@@ -37,16 +36,7 @@ def sensors_state(username):
     sql1 = "SELECT sensor.id, name, valve, last_seen, last_data FROM sensor " \
            "INNER JOIN sensor_state ON sensor.id=sensor_state.sensor_id " \
            "WHERE sensor.house_id=%s"
-    print(result[0][0])
-    # print(database(sql, [result[0][0]))
-    print(database(sql1, [result[0][0]]))
     return database(sql1, [result[0][0]])
-# def get_house_sensors(house_id):
-#     with connection.cursor() as cursor:
-#         cursor.execute("SELECT sensor.id, name, valve, last_seen, last_data FROM sensor "
-#                        "INNER JOIN sensor_state ON sensor.id=sensor_state.sensor_id "
-#                        "WHERE sensor.house_id=%s", [house_id])
-#         return cursor.fetchall()
 
 
 def insert_chat_id(chat_id, username):
