@@ -86,8 +86,16 @@ def get_house_sensors(house_id):
 
 def get_house_valves(house_id):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT id, location, name, house_id, type, closed, last_updated "
+        cursor.execute("SELECT id, location, name, house_id, type, closed, last_updated, active, uniq_token "
                        "FROM valve WHERE house_id=%s AND active=1",
+                       [house_id])
+        return cursor.fetchall()
+
+
+def get_house_valves_all(house_id):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT id, location, name, house_id, type, closed, last_updated, active, uniq_token "
+                       "FROM valve WHERE house_id=%s",
                        [house_id])
         return cursor.fetchall()
 
