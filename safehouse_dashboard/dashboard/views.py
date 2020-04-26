@@ -104,7 +104,7 @@ def users_view(request):
             print(url)
         else:
             url = None
-        return render(request, 'dashboard/users.html', {'token': url})
+        return render(request, 'dashboard/users.html', {'token': url, 'user': request.user.first_name + " " + request.user.last_name})
     else:
         return render(request, 'dashboard/index.html')
 
@@ -178,7 +178,8 @@ def valves_view(request):
         house_id = sql.get_default_house(request.user.id)
         return render(request, "dashboard/valve.html",
                       {"locations": sql.get_locations(),
-                       "valves": sql.get_house_valves(house_id)})
+                       "valves": sql.get_house_valves_all(house_id),
+                       'user': request.user.first_name + " " + request.user.last_name})
 
 
 def create_new_valve(request):
@@ -215,7 +216,8 @@ def telegram_notifications_view(request):
         house_id = sql.get_default_house(request.user.id)
         return render(request, "dashboard/telegram_notification.html",
                       {"users": sql.get_house_users(house_id),
-                       "telegram": sql.get_telegram_users(house_id)})
+                       "telegram": sql.get_telegram_users(house_id),
+                       "user": request.user.first_name + " " + request.user.last_name})
 
 
 def telegram_new_user(request):
