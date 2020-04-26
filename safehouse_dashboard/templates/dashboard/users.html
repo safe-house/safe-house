@@ -1,0 +1,54 @@
+{% extends "./dashboard_base.html" %}
+{% load tags %}
+
+{% block main-content %}
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <form class="" action="{% url 'enable_user_invitation' %}" method="post">
+                {% csrf_token %}
+                <div class="my-auto ml-auto">
+                    <div class="custom-control custom-toggle custom-toggle-sm mb-1">
+                        <input type="checkbox" id="customToggle" name="customToggle" class="custom-control-input" {% if token.0  %}checked="checked"{% endif %}>
+                        <label class="custom-control-label" for="customToggle">
+                            <a class="closed">Link sharing</a></label>
+                    </div>
+                </div>
+                <input type="text" class="form-control" id="form1-username" value="{% if token.0  %}{{ token }}{% endif %}">
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script type="text/javascript">
+        const csrf_token = jQuery("[name=csrfmiddlewaretoken]").val();
+        var toggle = document.getElementById('customToggle');
+
+        toggle.addEventListener('change', function (e) {
+            if (toggle.checked) {
+                $.ajax({
+                    headers: {'X-CSRFToken': csrf_token},
+                    type: 'POST',
+                    async: true,
+                    url: '{% url 'enable_user_invitation' %}',
+                    success: function (data) {
+                        const token = data["token"];
+                        document.getElementById('form1-username').value = token;
+                    },
+                    dataType: 'json',
+                });
+            }
+            else {
+                document.getElementById('form1-username').value = null;
+                $.ajax({
+                    headers: {'X-CSRFToken': csrf_token},
+                    type: 'POST',
+                    async: true,
+                    url: '{% url 'disable_user_invitation' %}',
+                    success: function () {
+                    },
+                    dataType: 'json',
+                });
+            }
+        });
+    </script>
+{% endblock %}
