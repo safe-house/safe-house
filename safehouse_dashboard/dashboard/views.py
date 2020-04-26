@@ -63,25 +63,25 @@ def dashboard_login(request):
 
 def confirm_register(request):
     if request.method == 'POST':
-        try:
-            user = User.objects.create_user(
-                username=request.POST['email'],
-                email=request.POST['email'],
-                password=request.POST['password'],
-                first_name=request.POST['name'],
-                last_name=request.POST['surname'],
-                is_active=0,
-            )
-            user.save()
-            house = sql.create_house()
-            sql.create_user_has_house(user.id, house)
-            sql.set_default_house(user.id, house)
-            token = secrets.token_urlsafe(32)
-            sql.save_token(user.id, token)
-            send_email(user.email, DOMAIN_NAME + "dashboard/" + str(user.id) + "/confirm/" + token)
-            return render(request, 'dashboard/register_confirmation.html')
-        except Exception as ex:
-            return redirect('/dashboard/register/', exception=ex)
+        # try:
+        user = User.objects.create_user(
+            username=request.POST['email'],
+            email=request.POST['email'],
+            password=request.POST['password'],
+            first_name=request.POST['name'],
+            last_name=request.POST['surname'],
+            is_active=0,
+        )
+        user.save()
+        house = sql.create_house()
+        sql.create_user_has_house(user.id, house)
+        sql.set_default_house(user.id, house)
+        token = secrets.token_urlsafe(32)
+        sql.save_token(user.id, token)
+        send_email(user.email, DOMAIN_NAME + "dashboard/" + str(user.id) + "/confirm/" + token)
+        return render(request, 'dashboard/register_confirmation.html')
+        # except Exception as ex:
+        #     return redirect('/dashboard/register/', exception=ex)
     else:
         return redirect('/dashboard/error/')
 
@@ -93,6 +93,42 @@ def confirm_email(request, user_id, token):
         return redirect('/dashboard/login')
     else:
         return redirect('/dashboard/error/')
+
+
+def users_view(request):
+    if request.user.is_authenticated:
+        house_id = sql.get_default_house(request.user.id)[0]
+        token = sql.get_invitation_token(house_id)
+        if token:
+            url = DOMAIN_NAME + "dashboard/users/" + str(house_id) + "/add/" + token[0]
+            print(url)
+        else:
+            url = None
+        return render(request, 'dashboard/users.html', {'token': url})
+    else:
+        return render(request, 'dashboard/index.html')
+
+
+def enable_user_invitation(request):
+    if request.user.is_authenticated and request.is_ajax():
+        token = secrets.token_urlsafe(32)
+        house_id = sql.get_default_house(request.user.id)[0]
+        sql.create_user_invitation_token(house_id, token)
+        url = DOMAIN_NAME + "dashboard/users/" + str(house_id) + "/add/" + token
+        response = {"token": url}
+        return JsonResponse(response)
+    else:
+        raise Http404
+
+
+def disable_user_invitation(request):
+    if request.user.is_authenticated and request.is_ajax():
+        house_id = sql.get_default_house(request.user.id)
+        sql.delete_user_invitation_token(house_id)
+        response = {"token": 0}
+        return JsonResponse(response)
+    else:
+        raise Http404
 
 
 def send_email(email, message):
@@ -264,7 +300,3 @@ def api_update(request, token):
                 sql.update_sensor(sensor['last_updated'], sensor['value'], sensor['sensor'])
         # except Exception as ex:
         return HttpResponse("true")
-
-
-
-

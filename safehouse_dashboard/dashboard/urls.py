@@ -1,6 +1,5 @@
 from django.urls import path
 
-
 from . import views
 
 urlpatterns = [
@@ -14,6 +13,9 @@ urlpatterns = [
     path('register/confirm/', views.confirm_register, name='confirm_register'),
     path('<int:user_id>/confirm/<str:token>', views.confirm_email, name='confirm_email'),
 
+    path('users', views.users_view, name='users_view'),
+    path('users/users_access_enable', views.enable_user_invitation, name='enable_user_invitation'),
+    path('users/users_access_disable', views.disable_user_invitation, name='disable_user_invitation'),
 
     path('error/', views.error_view, name='error_view'),
     path('update/', views.update_dashboard, name='update_dashboard'),

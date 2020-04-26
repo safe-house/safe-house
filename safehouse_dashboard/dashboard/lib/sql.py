@@ -1,11 +1,11 @@
 from django.db import connection
-import time
+import datetime
 
 
 def save_token(user_id, token):
     with connection.cursor() as cursor:
         cursor.execute("INSERT INTO authentication (auth_user_id, code, expire_at)"
-                       " VALUES (%s, %s, %s)", [user_id, token, time.strftime('%Y-%m-%d %H:%M:%S')])
+                       " VALUES (%s, %s, %s)", [user_id, token, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')])
 
 
 def check_token(user_id, token):
@@ -13,6 +13,26 @@ def check_token(user_id, token):
         cursor.execute("SELECT auth_user_id, code, expire_at FROM authentication "
                        "WHERE auth_user_id=%s AND code=%s",
                        [user_id, token])
+        row = cursor.fetchone()
+        return row
+
+
+def create_user_invitation_token(house_id, token):
+    with connection.cursor() as cursor:
+        cursor.execute("INSERT INTO house_authentication (code, expire_at, house_id)"
+                       "VALUES (%s, %s, %s)",
+                       [token, (datetime.datetime.now() + datetime.timedelta(minutes=10)).strftime('%Y-%m-%d %H:%M:%S'),
+                        house_id])
+
+
+def delete_user_invitation_token(house_id):
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM house_authentication WHERE house_id=%s", [house_id])
+
+
+def get_invitation_token(house_id):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT code FROM house_authentication WHERE house_id=%s", [house_id])
         row = cursor.fetchone()
         return row
 
