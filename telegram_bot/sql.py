@@ -1,15 +1,16 @@
 import mysql.connector
+import constants
 
 
 def database(query, params, fetch=True):
     try:
         connection = mysql.connector.connect(
-            host="localhost",
-            port="3306",
-            user="safehouse",
-            passwd="safehouse2020",
-            database="safehouse1",
-            auth_plugin='mysql_native_password'
+            host=constants.HOST,
+            port=constants.PORT,
+            user=constants.USER,
+            passwd=constants.PASSWORD,
+            database=constants.DATABASE,
+            auth_plugin=constants.AUTH_PLUGIN
         )
         cursor = connection.cursor()
         cursor.execute(query, params)
