@@ -57,8 +57,8 @@ def dashboard_login(request):
         if user:
             login(request, user)
             return redirect('/dashboard/')
-        else:
-            return redirect('/dashboard/login/')
+        # else:
+        #     return redirect('/dashboard/login/')
 
 
 def confirm_register(request):
@@ -104,7 +104,8 @@ def users_view(request):
             print(url)
         else:
             url = None
-        return render(request, 'dashboard/users.html', {'token': url, 'user': request.user.first_name + " " + request.user.last_name})
+        return render(request, 'dashboard/users.html',
+                      {'token': url, 'user': request.user.first_name + " " + request.user.last_name})
     else:
         return render(request, 'dashboard/index.html')
 
@@ -129,6 +130,31 @@ def disable_user_invitation(request):
         return JsonResponse(response)
     else:
         raise Http404
+
+
+def invite_user_to_house(request):
+    if request.user.is_authenticated and request.method == 'POST':
+        token = secrets.token_urlsafe(32)
+        password = secrets.token_urlsafe(8)
+        print(password)
+        house_id = sql.get_default_house(request.user.id)[0]
+        user = User.objects.create_user(
+            username=request.POST['email'],
+            email=request.POST['email'],
+            password=password,
+            first_name="Name",
+            last_name="Surname",
+            is_active=0,
+        )
+        user.save()
+        sql.create_user_has_house(user.id, house_id)
+        sql.set_default_house(user.id, house_id)
+        sql.save_token(user.id, token)
+        text = 'Hello there,\n You were added to the house! Please click the link to continue registration \n' + DOMAIN_NAME + "dashboard/" + str(
+            user.id) + "/confirm/" + token + '\nYour login is your current email and password is:  ' + password
+        print(text)
+        send_email(user.email, text)
+        return redirect('/dashboard/users')
 
 
 def send_email(email, message):
