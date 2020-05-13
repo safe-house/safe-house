@@ -219,3 +219,8 @@ def get_chat_id(token):
         house = cursor.fetchone()
         cursor.execute("SELECT chat_id FROM telegram_bot where house_id=%s", [house[0]])
         return cursor.fetchall()
+
+
+def update_user(name, surname, user_id):
+    with connection.cursor() as cursor:
+        cursor.execute("UPDATE auth_user SET first_name=%s, last_name=%s where id=%s", [name, surname, user_id])

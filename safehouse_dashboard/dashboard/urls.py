@@ -31,4 +31,6 @@ urlpatterns = [
 
     path('api/update/<str:token>', views.api_update, name='api_update'),
 
+    path('profile/', views.profile_view, name='profile_view'),
+    path('profile/edit_user', views.edit_user, name='edit_user'),
 ]

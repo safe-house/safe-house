@@ -34,6 +34,14 @@ def register_confirmation_view(request):
         return render(request, 'dashboard/register_confirmation.html')
 
 
+def profile_view(request):
+    if request.user.is_authenticated:
+        return render(request, 'dashboard/profile.html', {'user': request.user.first_name + " " + request.user.last_name,
+                                                          'user_info': [request.user.first_name, request.user.last_name]})
+    else:
+        return render(request, 'dashboard/login.html')
+
+
 def error_view(request):
     return render(request, 'dashboard/error.html')
 
@@ -64,6 +72,7 @@ def dashboard_login(request):
 def confirm_register(request):
     if request.method == 'POST':
         # try:
+
         user = User.objects.create_user(
             username=request.POST['email'],
             email=request.POST['email'],
@@ -302,3 +311,21 @@ def api_update(request, token):
                 sql.update_sensor(sensor['last_updated'], sensor['value'], sensor['sensor'])
         # except Exception as ex:
         return HttpResponse("true")
+
+
+def edit_user(request):
+    if request.user.is_authenticated and request.method == 'POST':
+        # try:
+        name = request.POST['FirstName']
+        surname = request.POST['LastName']
+        password1 = request.POST['newPassword1']
+        password2 = request.POST['newPassword2']
+        user = request.user
+        if password1 == password2 and len(password1) > 0:
+            user.set_password(password1)
+        user.save()
+        sql.update_user(name, surname, request.user.id)
+        return redirect('/dashboard/')
+
+        # except Exception as ex:
+        #     return redirect('/dashboard/', exception=ex)
