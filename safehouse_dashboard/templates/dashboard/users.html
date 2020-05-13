@@ -2,19 +2,77 @@
 {% load tags %}
 
 {% block main-content %}
+    <div class="page-header row no-gutters py-4">
+        <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
+            <span class="text-uppercase page-subtitle">Overview</span>
+            <h3 class="page-title">Users Preferences</h3>
+        </div>
+    </div>
     <div class="container-fluid">
         <div class="row justify-content-center">
-            <form class="" action="{% url 'enable_user_invitation' %}" method="post">
-                {% csrf_token %}
-                <div class="my-auto ml-auto">
-                    <div class="custom-control custom-toggle custom-toggle-sm mb-1">
-                        <input type="checkbox" id="customToggle" name="customToggle" class="custom-control-input" {% if token.0  %}checked="checked"{% endif %}>
-                        <label class="custom-control-label" for="customToggle">
-                            <a class="closed">Link sharing</a></label>
+            {#            <form class="" action="{% url 'enable_user_invitation' %}" method="post">#}
+            {#                {% csrf_token %}#}
+            {#                <div class="my-auto ml-auto">#}
+            {#                    <div class="custom-control custom-toggle custom-toggle-sm mb-1">#}
+            {#                        <input type="checkbox" id="customToggle" name="customToggle" class="custom-control-input"#}
+            {#                               {% if token.0 %}checked="checked"{% endif %}>#}
+            {#                        <label class="custom-control-label" for="customToggle">#}
+            {#                            <a class="closed">Link sharing</a></label>#}
+            {#                    </div>#}
+            {#                </div>#}
+            {#                <input type="text" class="form-control" id="form1-username"#}
+            {#                       value="{% if token.0 %}{{ token }}{% endif %}">#}
+            {#            </form>#}
+        </div>
+        <div class="col-lg-5 col-md-12 col-sm-12 mb-4">
+            <div class="card card-small blog-comments">
+                <div class="card-header border-bottom">
+                    <h6 class="m-0">Add users</h6>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item px-3">
+                            <p class="card-text text-muted">Write an email address of the user to add and provide him
+                                with necessary preferences. We will sent him a confirmation link. </p>
+                            <strong class="text-muted d-block mb-2">User email</strong>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="example@mail.com"
+                                       aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="button">Button</button>
+                                </div>
+                            </div>
+                            <strong class="text-muted d-block mb-2">User preferences</strong>
+                            <div class="custom-control custom-checkbox mb-1">
+                                <input type="checkbox" class="custom-control-input" id="formsCheckboxDefault">
+                                <label class="custom-control-label" for="formsCheckboxDefault">Admin</label>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer border-top">
+                    <div class="row">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item px-3">
+                                <form class="" action="{% url 'enable_user_invitation' %}" method="post">
+                                    {% csrf_token %}
+                                    <div class="my-auto ml-auto">
+                                        <div class="custom-control custom-toggle custom-toggle-sm mb-1">
+                                            <input type="checkbox" id="customToggle" name="customToggle"
+                                                   class="custom-control-input"
+                                                   {% if token.0 %}checked="checked"{% endif %}>
+                                            <label class="custom-control-label" for="customToggle">
+                                                <a class="closed">Link sharing</a></label>
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control" id="form1-username"
+                                           value="{% if token.0 %}{{ token }}{% endif %}">
+                                </form>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                <input type="text" class="form-control" id="form1-username" value="{% if token.0  %}{{ token }}{% endif %}">
-            </form>
+            </div>
         </div>
     </div>
 {% endblock %}
@@ -36,8 +94,7 @@
                     },
                     dataType: 'json',
                 });
-            }
-            else {
+            } else {
                 document.getElementById('form1-username').value = null;
                 $.ajax({
                     headers: {'X-CSRFToken': csrf_token},
