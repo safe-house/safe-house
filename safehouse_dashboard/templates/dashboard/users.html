@@ -9,21 +9,21 @@
         </div>
     </div>
     <div class="container-fluid">
-{#        <div class="row justify-content-center">#}
-            {#            <form class="" action="{% url 'enable_user_invitation' %}" method="post">#}
-            {#                {% csrf_token %}#}
-            {#                <div class="my-auto ml-auto">#}
-            {#                    <div class="custom-control custom-toggle custom-toggle-sm mb-1">#}
-            {#                        <input type="checkbox" id="customToggle" name="customToggle" class="custom-control-input"#}
-            {#                               {% if token.0 %}checked="checked"{% endif %}>#}
-            {#                        <label class="custom-control-label" for="customToggle">#}
-            {#                            <a class="closed">Link sharing</a></label>#}
-            {#                    </div>#}
-            {#                </div>#}
-            {#                <input type="text" class="form-control" id="form1-username"#}
-            {#                       value="{% if token.0 %}{{ token }}{% endif %}">#}
-            {#            </form>#}
-{#        </div>#}
+        {#        <div class="row justify-content-center">#}
+        {#            <form class="" action="{% url 'enable_user_invitation' %}" method="post">#}
+        {#                {% csrf_token %}#}
+        {#                <div class="my-auto ml-auto">#}
+        {#                    <div class="custom-control custom-toggle custom-toggle-sm mb-1">#}
+        {#                        <input type="checkbox" id="customToggle" name="customToggle" class="custom-control-input"#}
+        {#                               {% if token.0 %}checked="checked"{% endif %}>#}
+        {#                        <label class="custom-control-label" for="customToggle">#}
+        {#                            <a class="closed">Link sharing</a></label>#}
+        {#                    </div>#}
+        {#                </div>#}
+        {#                <input type="text" class="form-control" id="form1-username"#}
+        {#                       value="{% if token.0 %}{{ token }}{% endif %}">#}
+        {#            </form>#}
+        {#        </div>#}
         <div class="col-lg-5 col-md-12 col-sm-12 mb-4">
             <div class="card card-small blog-comments">
                 <div class="card-header border-bottom">
@@ -39,7 +39,7 @@
                             <div class="input-group mb-3">
                                 <form class="" action="{% url 'invite_user_to_house' %}" method="post">
                                     {% csrf_token %}
-                                    <input type="text" class="form-control" placeholder="example@mail.com"
+                                    <input type="email" class="form-control" placeholder="example@mail.com"
                                            aria-label="User email" aria-describedby="basic-addon2" name="email"
                                            required>
                                     <div class="input-group-append">
@@ -80,40 +80,57 @@
             </div>
         </div>
         <div class="card card-small mb-4">
-                      <div class="card-header border-bottom">
-                        <h6 class="m-0">Dashboard Users</h6>
-                      </div>
-                      <div class="card-body p-0 pb-3 text-center">
-                        <table class="table mb-0">
-                          <thead class="bg-light">
-                            <tr>
-                              <th scope="col" class="border-0">#</th>
-                              <th scope="col" class="border-0">First Name</th>
-                              <th scope="col" class="border-0">Last Name</th>
-                              <th scope="col" class="border-0">Email</th>
-                              <th scope="col" class="border-0">Actions</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td>1</td>
-                              <td>Ali</td>
-                              <td>Kerry</td>
-                              <td>Russian Federation</td>
-                              <td>Gdańsk</td>
-                            </tr>
-                            <tr>
-                              <td>2</td>
-                              <td>Clark</td>
-                              <td>Angela</td>
-                              <td>Estonia</td>
-                              <td>Borghetto di Vara</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
+            <div class="card-header border-bottom">
+                <h6 class="m-0">Dashboard Users</h6>
+            </div>
+            <div class="card-body p-0 pb-3 text-center">
+                <table class="table mb-0">
+                    <thead class="bg-light">
+                    <tr>
+                        <th scope="col" class="border-0">#</th>
+                        <th scope="col" class="border-0">First Name</th>
+                        <th scope="col" class="border-0">Last Name</th>
+                        <th scope="col" class="border-0">Email</th>
+                        <th scope="col" class="border-0">Is Active</th>
+                        <th scope="col" class="border-0">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+
+                    {% for user in users %}
+
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ user.1 }}</td>
+                            <td>{{ user.2 }}</td>
+                            <td>{{ user.3 }}</td>
+                            <td>
+                                {% if user.4 %}
+                                    <span class="text-success">
+                                        <i class="material-icons">check</i>
+                                    </span>
+                                {% else %}
+                                    <span class="text-danger">
+                                        <i class="material-icons">clear</i>
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form class="" action="{% url 'delete_user' %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="mb-4 btn btn-primary mr-2" name="id"
+                                            value="{{ user.0 }}">Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
+    </div>
 {% endblock %}
 {% block script %}
     <script type="text/javascript">

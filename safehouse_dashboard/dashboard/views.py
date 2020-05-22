@@ -36,8 +36,9 @@ def register_confirmation_view(request):
 
 def profile_view(request):
     if request.user.is_authenticated:
-        return render(request, 'dashboard/profile.html', {'user': request.user.first_name + " " + request.user.last_name,
-                                                          'user_info': [request.user.first_name, request.user.last_name]})
+        return render(request, 'dashboard/profile.html',
+                      {'user': request.user.first_name + " " + request.user.last_name,
+                       'user_info': [request.user.first_name, request.user.last_name]})
     else:
         return render(request, 'dashboard/login.html')
 
@@ -114,7 +115,10 @@ def users_view(request):
         else:
             url = None
         return render(request, 'dashboard/users.html',
-                      {'token': url, 'user': request.user.first_name + " " + request.user.last_name})
+                      {'token': url,
+                       'user': request.user.first_name + " " + request.user.last_name,
+                       'users': sql.get_house_users(house_id),
+                       'number': 0})
     else:
         return render(request, 'dashboard/index.html')
 
@@ -355,3 +359,16 @@ def edit_user(request):
 
         # except Exception as ex:
         #     return redirect('/dashboard/', exception=ex)
+
+
+def delete_user(request):
+    if request.user.is_authenticated and request.method == 'POST':
+        # try:
+        user_id = request.POST['id']
+        house_id = sql.get_default_house(request.user.id)
+        sql.delete_user(user_id, house_id)
+        user = User.objects.get(id=user_id)
+        user.delete()
+        return redirect('/dashboard/users')
+    # except Exception as ex:
+    #     return redirect('/dashboard/telegram_notification/', exception=ex)

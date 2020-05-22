@@ -87,6 +87,14 @@ def create_user_has_house(user_id, house_id):
                        [user_id, house_id])
 
 
+def delete_user_has_house(user_id, house_id):
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM chose_house WHERE user_id=%s AND house_id=%s",
+                       [user_id, house_id])
+        cursor.execute("DELETE FROM auth_user_has_house WHERE auth_user_id=%s AND house_id=%s",
+                       [user_id, house_id])
+
+
 def get_default_house(user_id):
     with connection.cursor() as cursor:
         cursor.execute("SELECT house_id "
@@ -169,7 +177,7 @@ def get_telegram_users(house_id):
 
 def get_house_users(house_id):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT auth_user_id, first_name, last_name "
+        cursor.execute("SELECT auth_user_id, first_name, last_name, email, is_active "
                        "FROM auth_user_has_house "
                        "INNER JOIN auth_user "
                        "ON auth_user_has_house.auth_user_id=auth_user.id  "
@@ -224,3 +232,21 @@ def get_chat_id(token):
 def update_user(name, surname, user_id):
     with connection.cursor() as cursor:
         cursor.execute("UPDATE auth_user SET first_name=%s, last_name=%s where id=%s", [name, surname, user_id])
+
+
+def delete_user(user_id, house_id):
+    delete_telegram_by_user_id(user_id, house_id)
+    delete_profile_settings(user_id)
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM authentication WHERE auth_user_id=%s", [user_id])
+    delete_user_has_house(user_id, house_id)
+
+
+def delete_telegram_by_user_id(user_id, house_id):
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM telegram_bot WHERE auth_user_id=%s AND house_id=%s", [user_id, house_id])
+
+
+def delete_profile_settings(user_id):
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM profile_settings WHERE auth_user_id=%s", [user_id])
