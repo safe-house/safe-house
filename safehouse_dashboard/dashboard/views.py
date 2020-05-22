@@ -84,7 +84,7 @@ def confirm_register(request):
         )
         user.save()
         house = sql.create_house()
-        sql.create_user_has_house(user.id, house)
+        sql.create_user_has_house(user.id, house, 1)
         sql.set_default_house(user.id, house)
         token = secrets.token_urlsafe(32)
         sql.save_token(user.id, token)
@@ -149,7 +149,6 @@ def invite_user_to_house(request):
     if request.user.is_authenticated and request.method == 'POST':
         token = secrets.token_urlsafe(32)
         password = secrets.token_urlsafe(8)
-        print(password)
         house_id = sql.get_default_house(request.user.id)[0]
         user = User.objects.create_user(
             username=request.POST['email'],
@@ -160,12 +159,17 @@ def invite_user_to_house(request):
             is_active=0,
         )
         user.save()
-        sql.create_user_has_house(user.id, house_id)
+        is_admin = request.POST.get('admin', "false")
+        print(is_admin)
+        if is_admin == "on":
+            is_admin = 1
+        else:
+            is_admin = 0
+        sql.create_user_has_house(user.id, house_id, is_admin)
         sql.set_default_house(user.id, house_id)
         sql.save_token(user.id, token)
         text = 'Hello there,\n You were added to the house! Please click the link to continue registration \n' + DOMAIN_NAME + "dashboard/" + str(
             user.id) + "/confirm/" + token + '\nYour login is your current email and password is:  ' + password
-        print(text)
         send_email(user.email, text)
         return redirect('/dashboard/users')
 

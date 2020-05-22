@@ -81,10 +81,10 @@ def set_default_house(user_id, house_id):
         cursor.execute("INSERT INTO chose_house(user_id, house_id) VALUES(%s, %s)", [user_id, house_id])
 
 
-def create_user_has_house(user_id, house_id):
+def create_user_has_house(user_id, house_id, is_admin):
     with connection.cursor() as cursor:
-        cursor.execute("INSERT INTO auth_user_has_house(auth_user_id, house_id) VALUES(%s, %s)",
-                       [user_id, house_id])
+        cursor.execute("INSERT INTO auth_user_has_house(auth_user_id, house_id, is_admin) VALUES(%s, %s,  %s)",
+                       [user_id, house_id, is_admin])
 
 
 def delete_user_has_house(user_id, house_id):
