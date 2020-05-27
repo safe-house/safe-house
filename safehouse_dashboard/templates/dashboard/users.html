@@ -24,6 +24,7 @@
         {#                       value="{% if token.0 %}{{ token }}{% endif %}">#}
         {#            </form>#}
         {#        </div>#}
+        {% if  preferences.0 == 1%}
         <div class="col-lg-5 col-md-12 col-sm-12 mb-4">
             <div class="card card-small blog-comments">
                 <div class="card-header border-bottom">
@@ -79,6 +80,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
         <div class="card card-small mb-4">
             <div class="card-header border-bottom">
                 <h6 class="m-0">Dashboard Users</h6>
@@ -92,7 +94,9 @@
                         <th scope="col" class="border-0">Last Name</th>
                         <th scope="col" class="border-0">Email</th>
                         <th scope="col" class="border-0">Is Active</th>
+                        {% if preferences.0 == 1 %}
                         <th scope="col" class="border-0">Actions</th>
+                        {% endif %}
                     </tr>
                     </thead>
                     <tbody>
@@ -116,6 +120,7 @@
                                     </span>
                                 {% endif %}
                             </td>
+                            {% if preferences.0 == 1 %}
                             <td>
                                 <form class="" action="{% url 'delete_user' %}" method="post">
                                     {% csrf_token %}
@@ -124,6 +129,7 @@
                                     </button>
                                 </form>
                             </td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                     </tbody>
