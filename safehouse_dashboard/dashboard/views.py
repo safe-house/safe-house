@@ -109,6 +109,7 @@ def users_view(request):
     if request.user.is_authenticated:
         house_id = sql.get_default_house(request.user.id)[0]
         token = sql.get_invitation_token(house_id)
+        user_id = request.user.id
         if token:
             url = DOMAIN_NAME + "dashboard/users/" + str(house_id) + "/add/" + token[0]
             print(url)
@@ -118,7 +119,9 @@ def users_view(request):
                       {'token': url,
                        'user': request.user.first_name + " " + request.user.last_name,
                        'users': sql.get_house_users(house_id),
-                       'number': 0})
+                       'number': 0,
+                       'preferences': sql.check_user_preferences(user_id)
+                       })
     else:
         return render(request, 'dashboard/index.html')
 
@@ -191,12 +194,15 @@ def send_email(email, message):
 def dashboard_view(request):
     if request.user.is_authenticated:
         house_id = sql.get_default_house(request.user.id)
+        user_id = request.user.id
         return render(request, 'dashboard/index.html',
                       {'valves_list': sql.get_house_valves(house_id),
                        'sensors_list': sql.get_house_sensors(house_id),
                        'locations_list': ("", "Kitchen", "Bathroom", "Living room", "Dining room",
                                           "Bedroom", "Utility room", "Other"),
-                       'user': request.user.first_name + " " + request.user.last_name})
+                       'user': request.user.first_name + " " + request.user.last_name,
+                       'preferences': sql.check_user_preferences(user_id)
+                       })
     else:
         return redirect('/dashboard/login/')
 
@@ -219,10 +225,12 @@ def update_dashboard(request):
 def valves_view(request):
     if request.user.is_authenticated:
         house_id = sql.get_default_house(request.user.id)
+        user_id = request.user.id
         return render(request, "dashboard/valve.html",
                       {"locations": sql.get_locations(),
                        "valves": sql.get_house_valves_all(house_id),
-                       'user': request.user.first_name + " " + request.user.last_name})
+                       'user': request.user.first_name + " " + request.user.last_name,
+                       'preferences': sql.check_user_preferences(user_id)})
 
 
 def create_new_valve(request):
@@ -257,10 +265,12 @@ def delete_valve(request):
 def telegram_notifications_view(request):
     if request.user.is_authenticated:
         house_id = sql.get_default_house(request.user.id)
+        user_id = request.user.id
         return render(request, "dashboard/telegram_notification.html",
                       {"users": sql.get_house_users(house_id),
                        "telegram": sql.get_telegram_users(house_id),
-                       "user": request.user.first_name + " " + request.user.last_name})
+                       "user": request.user.first_name + " " + request.user.last_name,
+                       'preferences': sql.check_user_preferences(user_id)})
 
 
 def telegram_new_user(request):
