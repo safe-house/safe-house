@@ -278,6 +278,9 @@ def telegram_new_user(request):
         try:
             user_name = request.POST['username']
             nickname = request.POST.get('user')
+            if user_name[0] == "@":
+                print(user_name)
+                user_name = user_name[1:]
             sql.create_telegram(user_name, sql.get_default_house(request.user.id), nickname)
             return redirect('/dashboard/telegram_notification/')
         except Exception as ex:

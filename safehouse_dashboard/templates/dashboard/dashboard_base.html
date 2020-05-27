@@ -32,7 +32,7 @@
                 <div class="nav-wrapper">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" href={% url 'dashboard_view' %}>
+                            <a class="nav-link {% if request.resolver_match.url_name == "dashboard_view" %}active{% endif %}" href={% url 'dashboard_view' %}>
                                 <i class="material-icons">dashboard</i>
                                 <span>Dashboard</span>
                             </a>
@@ -44,13 +44,13 @@
                         {#                            </a>#}
                         {#                        </li>#}
                         <li class="nav-item">
-                            <a class="nav-link " href="{% url 'valves_view' %}">
+                            <a class="nav-link {% if request.resolver_match.url_name == "valves_view" %}active{% endif %}" href="{% url 'valves_view' %}">
                                 <i class="material-icons">add</i>
                                 <span>Add New Valve</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " href="{% url 'telegram_notifications_view' %}">
+                            <a class="nav-link {% if request.resolver_match.url_name == "telegram_notifications_view" %}active{% endif %}" href="{% url 'telegram_notifications_view' %}">
                                 <i class="material-icons">send</i>
                                 <span>Telegram Notifications</span>
                             </a>
@@ -62,7 +62,7 @@
 {#                            </a>#}
 {#                        </li>#}
 {#                        {% if  preferences.0 == 1%}#}
-                        <li class="nav-item">
+                        <li class="nav-item {% if request.resolver_match.url_name == "users_view" %}active{% endif %}">
                             <a class="nav-link " href="{% url 'users_view' %}">
                                 <i class="material-icons">person</i>
                                 <span>Users</span>
@@ -138,8 +138,8 @@
                                         <i class="material-icons">&#xE7FD;</i> Profile</a>
                                     {#                                    <a class="dropdown-item" href="components-blog-posts.html">#}
                                     {#                                        <i class="material-icons">vertical_split</i> Blog Posts</a>#}
-                                    <a class="dropdown-item" href="add-new-post.html">
-                                        <i class="material-icons">note_add</i> Add New Post</a>
+{#                                    <a class="dropdown-item" href="add-new-post.html">#}
+{#                                        <i class="material-icons">note_add</i> Add New Post</a>#}
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item text-danger" href="{% url 'logout_view' %}">
                                         <i class="material-icons text-danger">&#xE879;</i> Logout </a>
