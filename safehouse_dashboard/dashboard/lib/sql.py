@@ -87,6 +87,13 @@ def create_user_has_house(user_id, house_id, is_admin):
                        [user_id, house_id, is_admin])
 
 
+def check_user_preferences(user_id):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT is_admin FROM auth_user_has_house where auth_user_id=%s", [user_id])
+        preference = cursor.fetchone()
+        return preference
+
+
 def delete_user_has_house(user_id, house_id):
     with connection.cursor() as cursor:
         cursor.execute("DELETE FROM chose_house WHERE user_id=%s AND house_id=%s",
