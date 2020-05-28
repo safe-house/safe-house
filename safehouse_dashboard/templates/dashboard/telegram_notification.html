@@ -124,7 +124,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for user in messanger %}
+                                {% for user in messenger %}
                                     <tr>
                                         <form class="" action="{% url 'messenger_delete_user' %}" method="post">
                                             {% csrf_token %}
