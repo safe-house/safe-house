@@ -414,7 +414,7 @@ def messenger_delete_user(request):
         try:
             username = request.POST['username']
             house_id = sql.get_default_house(request.user.id)
-            sql.delete_telegram(username, house_id)
+            sql.delete_messenger_user(username)
             return redirect('/dashboard/telegram_notification/')
         except Exception as ex:
             return redirect('/dashboard/telegram_notification/', exception=ex)
