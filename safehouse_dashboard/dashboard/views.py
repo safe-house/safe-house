@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from dashboard.lib import sql, telegram, messenger
 
-DOMAIN_NAME = "127.0.0.1:8000/"
+DOMAIN_NAME = "http://134.209.244.186/"
 
 
 # ----------------------------------------------------------------------
