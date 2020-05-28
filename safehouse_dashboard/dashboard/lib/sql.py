@@ -275,6 +275,6 @@ def get_messenger_users_by_house(house_id):
         cursor.execute("SELECT messenger.auth_user_id, auth_user.first_name, auth_user.last_name "
                        "FROM messenger "
                        "INNER JOIN auth_user "
-                       "ON auth_user.id=telegram_bot.auth_user_id "
+                       "ON auth_user.id=messenger.auth_user_id "
                        "WHERE house_id=%s", [house_id])
         return cursor.fetchall()
