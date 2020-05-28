@@ -30,6 +30,8 @@ urlpatterns = [
     path('telegram_notification/', views.telegram_notifications_view, name='telegram_notifications_view'),
     path('telegram_notification/new', views.telegram_new_user, name='telegram_new_user'),
     path('telegram_notification/delete', views.telegram_delete_user, name='telegram_delete_user'),
+    path('messenger_notification/new', views.messenger_new_user, name='messenger_new_user'),
+    path('messenger_notification/delete', views.messenger_delete_user, name='messenger_delete_user'),
 
     path('api/update/<str:token>', views.api_update, name='api_update'),
 

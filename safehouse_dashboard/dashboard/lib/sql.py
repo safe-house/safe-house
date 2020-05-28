@@ -243,6 +243,7 @@ def update_user(name, surname, user_id):
 
 def delete_user(user_id, house_id):
     delete_telegram_by_user_id(user_id, house_id)
+    delete_messenger_user(user_id)
     delete_profile_settings(user_id)
     with connection.cursor() as cursor:
         cursor.execute("DELETE FROM authentication WHERE auth_user_id=%s", [user_id])
@@ -257,3 +258,23 @@ def delete_telegram_by_user_id(user_id, house_id):
 def delete_profile_settings(user_id):
     with connection.cursor() as cursor:
         cursor.execute("DELETE FROM profile_settings WHERE auth_user_id=%s", [user_id])
+
+
+def create_messenger_user(user_id, messenger_id, house_id):
+    with connection.cursor() as cursor:
+        cursor.execute("INSERT INTO messenger(auth_user_id, messenger_id, house_id) values(%s, %s, %s)", [user_id, messenger_id, house_id])
+
+
+def delete_messenger_user(user_id):
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM messenger WHERE auth_user_id=%s", [user_id])
+
+
+def get_messenger_users_by_house(house_id):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT messenger.auth_user_id, auth_user.first_name, auth_user.last_name "
+                       "FROM messenger "
+                       "INNER JOIN auth_user "
+                       "ON auth_user.id=telegram_bot.auth_user_id "
+                       "WHERE house_id=%s", [house_id])
+        return cursor.fetchall()

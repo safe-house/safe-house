@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
 
-from dashboard.lib import sql, telegram
+from dashboard.lib import sql, telegram, messenger
 
 DOMAIN_NAME = "127.0.0.1:8000/"
 
@@ -269,6 +269,7 @@ def telegram_notifications_view(request):
         return render(request, "dashboard/telegram_notification.html",
                       {"users": sql.get_house_users(house_id),
                        "telegram": sql.get_telegram_users(house_id),
+                       "messenger": sql.get_messenger_users_by_house(house_id),
                        "user": request.user.first_name + " " + request.user.last_name,
                        'preferences': sql.check_user_preferences(user_id)})
 
@@ -389,3 +390,31 @@ def delete_user(request):
         return redirect('/dashboard/users')
     # except Exception as ex:
     #     return redirect('/dashboard/telegram_notification/', exception=ex)
+
+
+def messenger_new_user(request):
+    pass
+    if request.user.is_authenticated and request.method == 'POST':
+        try:
+            url = request.POST['facebook_url']
+            user = request.POST.get('user')
+            facebook_id = messenger.get_facebook_id(url)
+            house_id = sql.get_default_house(request.user.id)
+            sql.create_messenger_user(user, facebook_id, house_id)
+            msg = "Hello test message!"
+            messenger.send_message(msg, facebook_id)
+            return redirect('/dashboard/telegram_notification/')
+        except Exception as ex:
+            return redirect('/dashboard/telegram_notification/', exception=ex)
+
+
+def messenger_delete_user(request):
+    pass
+    if request.user.is_authenticated and request.method == 'POST':
+        try:
+            username = request.POST['username']
+            house_id = sql.get_default_house(request.user.id)
+            sql.delete_telegram(username, house_id)
+            return redirect('/dashboard/telegram_notification/')
+        except Exception as ex:
+            return redirect('/dashboard/telegram_notification/', exception=ex)
