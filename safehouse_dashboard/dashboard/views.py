@@ -344,7 +344,7 @@ def api_update(request, token):
             names = ["Gas sensor", "Water sensor"]
             sensor_type = json_data['type']
             sensor_names = names[sensor_type - 1]
-            valve = sql.activate_valve(token)
+            valve = sql.activate_valve(token, sensor_type)
             for sensor in json_data['sensors']:
                 print(sensor['last_updated'], sensor['value'])
                 sql.create_sensor(sensor_names, valve[1], sensor_type, valve[0], sensor['sensor'],
