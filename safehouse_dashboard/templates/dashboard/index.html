@@ -15,36 +15,45 @@
             <div class="row">
                 {% csrf_token %}
                 <div class="col-lg-3">
-                <div class="card card-small card-post mb-4" name="valve">
-                    <div class="card-body justify-content-center">
-                        <div class="d-flex flex-column m-auto">
-                            <div class="stats-small__data text-center" style="max-width: 100% !important;">
-                                <span class="stats-small__label text-uppercase"><a>Valve Name</a></span>
-                                <h6 class="stats-small__value count my-2"><a class="name card-title">{{ valve.2 }}</a></h6>
+                    <div class="card card-small card-post mb-4" name="valve">
+                        <div class="card-body justify-content-center">
+                            <div class="d-flex flex-column m-auto">
+                                <div class="stats-small__data text-center" style="max-width: 100% !important;">
+                                    <span class="stats-small__label text-uppercase"><a>Valve Name</a></span>
+                                    <h6 class="stats-small__value count my-2"><a
+                                            class="name card-title">{{ valve.2 }}</a></h6>
+                                </div>
+                            </div>
+                            {#                        <p class="card-text text-muted" id="{{ valve.0 }}">#}
+
+                            {#                        </p>#}
+                        </div>
+
+                        <div class="card-footer border-top d-flex">
+                            <div class="card-post__author d-flex">
+                                <a href="#" class="card-post__author-avatar card-post__author-avatar--small"
+                                   style="background-image: url('/static/dashboard/images/icons/{% if valve.4 == "1" %}gas.png{% else %}water.png{% endif %}'); background-size: 50%; background-repeat: no-repeat"></a>
+                                <div class="d-flex flex-column justify-content-center ml-3">
+                                    <span class="card-post__author-name"><a
+                                            class="location">{{ locations_list|get_value:valve.1 }}</a></span>
+                                    <small class="text-muted"><a
+                                            class="last_update{{ valve.0 }}">{{ valve.6|date:"d M H\:i:s" }}</a></small>
+                                </div>
+                            </div>
+                            <div class="my-auto ml-auto">
+                                <div class="custom-control custom-toggle custom-toggle-sm mb-1">
+                                    {#                          <a class="closed">{% if valve.5 %} Closed {% else %} Open {% endif %} </a>#}
+                                    <input type="checkbox" id="customToggle{{ valve.0 }}"
+                                           name="customToggle{{ valve.0 }}" class="custom-control-input"
+                                            {% if valve.5 %} disabled="disabled" {% else %}
+                                           checked="checked" {% endif %} >
+                                    <label class="custom-control-label" for="customToggle{{ valve.0 }}"><a
+                                            class="closed{{ valve.0 }}">{% if valve.5 %} Closed {% else %}
+                                        Open {% endif %} </a></label>
+                                </div>
                             </div>
                         </div>
-{#                        <p class="card-text text-muted" id="{{ valve.0 }}">#}
-
-{#                        </p>#}
                     </div>
-
-                <div class="card-footer border-top d-flex">
-                    <div class="card-post__author d-flex">
-                      <a href="#" class="card-post__author-avatar card-post__author-avatar--small" style="background-image: url('/static/dashboard/images/icons/{% if valve.4 == "1"%}gas.png{% else %}water.png{% endif %}'); background-size: 50%; background-repeat: no-repeat"></a>
-                      <div class="d-flex flex-column justify-content-center ml-3">
-                        <span class="card-post__author-name"><a class="location">{{ locations_list|get_value:valve.1 }}</a></span>
-                        <small class="text-muted"><a class="last_update{{ valve.0 }}">{{ valve.6|date:"d M H\:i:s" }}</a></small>
-                      </div>
-                    </div>
-                    <div class="my-auto ml-auto">
-                      <div class="custom-control custom-toggle custom-toggle-sm mb-1">
-{#                          <a class="closed">{% if valve.5 %} Closed {% else %} Open {% endif %} </a>#}
-                          <input type="checkbox" id="customToggle{{ valve.0 }}" name="customToggle{{ valve.0 }}" class="custom-control-input" {% if valve.5 %} disabled="disabled" {% else %} checked="checked" {% endif %} >
-                          <label class="custom-control-label" for="customToggle{{ valve.0 }}"><a class="closed{{ valve.0 }}">{% if valve.5 %} Closed {% else %} Open {% endif %} </a></label>
-                      </div>
-                    </div>
-                </div>
-                </div>
                 </div>
 
                 {% for sensor in sensors_list %}
@@ -54,25 +63,39 @@
                                 <div class="card-body">
                                     <div class="d-flex flex-column m-auto">
                                         <div class="stats-small__data text-center" style="max-width: 100% !important;">
-                                            <span class="stats-small__label text-uppercase"><a name="type">{% if valve.4 == "1"%}Gas{% else %}Water{% endif %} Level</a></span>
-                                        <h6 class="stats-small__value count my-2"><a class="value{{ sensor.0 }}">{% if valve.4 == "1"%}{{ sensor.4 }}{% else %}Leakage{% endif %}</a></h6>
-                                      </div>
+                                            <span class="type{{ sensor.0 }} stats-small__label text-uppercase"><a
+                                                    name="type">{% if valve.4 == "1" %}Gas{% else %}Water{% endif %}
+                                                Level</a></span>
+                                            <h6 class="stats-small__value count my-2"><a class="value{{ sensor.0 }}">
+                                                {% if valve.4 == "1" %}
+                                                    {{ sensor.4 }}
+                                                {% else %}
+                                                    {% if sensor.4 == "0" %}
+                                                        OK
+                                                    {% else %}
+                                                        Leakage
+                                                    {% endif %}
+                                                {% endif %}
+                                            </a></h6></div>
                                     </div>
                                 </div>
                                 <div class="card-footer border-top d-flex">
                                     <div class="card-post__author d-flex">
-                                      <a href="#" class="card-post__author-avatar card-post__author-avatar--small" style="background-image: url('/static/dashboard/images/icons/sensor.png'); background-size: 50%; background-repeat: no-repeat"></a>
-                                      <div class="d-flex flex-column justify-content-center ml-3">
-                                        <span class="card-post__author-name"><a class="name">{{ sensor.1 }}</a></span>
-                                        <small class="text-muted"><a class="update{{ sensor.0 }}">{{ sensor.3|date:"d M H\:i:s" }}</a></small>
-                                      </div>
+                                        <a href="#" class="card-post__author-avatar card-post__author-avatar--small"
+                                           style="background-image: url('/static/dashboard/images/icons/sensor.png'); background-size: 50%; background-repeat: no-repeat"></a>
+                                        <div class="d-flex flex-column justify-content-center ml-3">
+                                            <span class="card-post__author-name"><a
+                                                    class="name">{{ sensor.1 }}</a></span>
+                                            <small class="text-muted"><a
+                                                    class="update{{ sensor.0 }}">{{ sensor.3|date:"d M H\:i:s" }}</a></small>
+                                        </div>
                                     </div>
                                     <div class="my-auto ml-auto">
                                     </div>
                                 </div>
-{#                                <p id="{{ sensor.0 }}">#}
-{##}
-{#                                </p>#}
+                                {#                                <p id="{{ sensor.0 }}">#}
+                                {##}
+                                {#                                </p>#}
                             </div>
                         </div>
                     {% endif %}
@@ -109,16 +132,17 @@
                         for (var i = 1; i < valves.length + 1; i++) {
                             {#var valve_state = $("#" + valves[i - 1][0]).children('a[class$="closed"]')#}
                             var valve_state = $(".closed" + valves[i - 1][0])
-                            var toggle = $("#customToggle"  + valves[i - 1][0]);
+                            var toggle = $("#customToggle" + valves[i - 1][0]);
                             if (valves[i - 1][1] === 1) {
                                 toggle.removeAttr("checked")
-                                toggle.attr("disabled","disabled");
+                                toggle.attr("disabled", "disabled");
                                 valve_state.text("Closed")
                                 {#console.log()#}
                             } else {
                                 valve_state.text("Open")
-                                toggle.attr("checked","unchecked");
-                                toggle.removeAttr("disabled")                            }
+                                toggle.attr("checked", "unchecked");
+                                toggle.removeAttr("disabled")
+                            }
                             var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                                 "Jul", "Aug", "Sep", "Oct", "Now", "Dec"];
                             var date = valves[i - 1][2];
@@ -135,10 +159,20 @@
                         }
                         for (var i = 1; i < sensors.length + 1; i++) {
                             var sensor_type = $(".type" + sensors[i - 1][0]).text();
-                            console.log(sensor_type);
+                            console.log(sensor_type.charAt(0));
+
                             var sensor_value = $(".value" + sensors[i - 1][0]);
 
-                            sensor_value.text(sensors[i - 1][4]);
+                            if (sensor_type.charAt(0) === "W") {
+                                if (sensors[i - 1][4] === "0") {
+                                    sensor_value.text("OK");
+                                } else {
+                                    sensor_value.text("Leakage");
+                                }
+
+                            } else {
+                                sensor_value.text(sensors[i - 1][4]);
+                            }
 
                             var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                                 "Jul", "Aug", "Sep", "Oct", "Now", "Dec"];
