@@ -205,9 +205,10 @@ def delete_valve(valve_id):
         cursor.execute("DELETE FROM valve WHERE id=%s", [valve_id])
 
 
-def activate_valve(token):
+def activate_valve(token, valve_type):
     with connection.cursor() as cursor:
-        cursor.execute("UPDATE valve SET active=1, last_updated=current_timestamp() WHERE uniq_token=%s", [token])
+        cursor.execute("UPDATE valve SET active=1, last_updated=current_timestamp(), type=%s WHERE uniq_token=%s",
+                       [valve_type, token])
         cursor.execute("SELECT id, house_id FROM valve WHERE uniq_token=%s", [token])
         return cursor.fetchone()
 
@@ -262,7 +263,8 @@ def delete_profile_settings(user_id):
 
 def create_messenger_user(user_id, messenger_id, house_id):
     with connection.cursor() as cursor:
-        cursor.execute("INSERT INTO messenger(auth_user_id, messenger_id, house_id) values(%s, %s, %s)", [user_id, messenger_id, house_id])
+        cursor.execute("INSERT INTO messenger(auth_user_id, messenger_id, house_id) values(%s, %s, %s)",
+                       [user_id, messenger_id, house_id])
 
 
 def delete_messenger_user(user_id):
