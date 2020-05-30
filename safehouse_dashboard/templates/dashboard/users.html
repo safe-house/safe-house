@@ -25,6 +25,7 @@
         {#            </form>#}
         {#        </div>#}
         {% if  preferences.0 == 1 %}
+            <div class="row">
             <div class="col-lg-5 col-md-12 col-sm-12 mb-4">
                 <div class="card card-small blog-comments">
                     <div class="card-header border-bottom">
@@ -38,32 +39,35 @@
                                     with necessary preferences. We will sent him a confirmation link. You guest need to
                                     confirm the letter and after that his account will be activated.</p>
                                 <strong class="text-muted d-block mb-2">User email</strong>
-                                <div class="input-group mb-3">
-                                    <form class="" action="{% url 'invite_user_to_house' %}" method="post">
-                                        {% csrf_token %}
-                                        <input type="email" class="form-control" placeholder="example@mail.com"
-                                               aria-label="User email" aria-describedby="basic-addon2" name="email"
-                                               required>
-                                        <br>
-                                        <strong class="text-muted d-block mb-2">User preferences</strong>
-                                        <br>
-                                        <div class="custom-control custom-checkbox mb-1">
-                                            <input type="checkbox" name="admin" class="custom-control-input"
-                                                   id="formsCheckboxDefault">
-                                            <label class="custom-control-label" for="formsCheckboxDefault">Admin</label>
-                                        </div>
+                                {#                                <div class="input-group mb-3">#}
+                                <form class="" action="{% url 'invite_user_to_house' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="email" class="form-control mb-3" placeholder="example@mail.com"
+                                           aria-label="User email" aria-describedby="basic-addon2" name="email"
+                                           required>
+
+                                    <strong class="text-muted d-block mb-2">User preferences</strong>
+
+                                    <div class="custom-control custom-checkbox mb-1">
+                                        <input type="checkbox" name="admin" class="custom-control-input mb-3"
+                                               id="formsCheckboxDefault">
+                                        <label class="custom-control-label" for="formsCheckboxDefault">Admin</label>
+                                    </div>
+
+                                    <div class="input-group-append mt-3">
+                                        <button type="submit" class="btn btn-primary">Send</button>
+                                    </div>
 
 
-                                        <div class="input-group-append">
-                                            <button type="submit" class="btn btn-primary">Send</button>
-                                        </div>
-                                    </form>
-                                </div>
+                                </form>
+                                {#                                </div>#}
                             </li>
                         </ul>
                     </div>
                     <div class="card-footer border-top">
-                        <div class="row">
+                        <div class="row justify-content-center">
+
+
                             {#                        <ul class="list-group list-group-flush">#}
                             {#                            <li class="list-group-item px-3">#}
                             {#                                <form class="" action="{% url 'enable_user_invitation' %}" method="post">#}
@@ -82,12 +86,13 @@
                             {#                                </form>#}
                             {#                            </li>#}
                             {#                        </ul>#}
+                            <a class="text-muted"><br></a>
                         </div>
                     </div>
                 </div>
             </div>
         {% endif %}
-        <div class="card card-small mb-4">
+        <div class="card card-small mb-4 col-md-7 col-sm-7 col-lg-7">
             <div class="card-header border-bottom">
                 <h6 class="m-0">Dashboard Users</h6>
             </div>
@@ -141,6 +146,13 @@
                     </tbody>
                 </table>
             </div>
+            <div class="card-footer border-top">
+                <div class="col text-right text-muted view-report">
+                    Next page →
+                </div>
+            </div>
+
+        </div>
         </div>
     </div>
 {% endblock %}

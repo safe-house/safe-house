@@ -1,150 +1,189 @@
 {% extends "./dashboard_base.html" %}
 
 {% block main-content %}
+    <div class="row"> <!-- Main row -->
+        <div class="pt-5 col-lg-5">
+            <div class="card card-small mb-4">
 
+                <div class="card-header border-bottom">
 
-    <div class="row justify-content-center">
-        <div class="container pt-5">
-            <div class="row">
-                <div class="col">
-                    <div class="card card-small mb-4">
-                        <div class="card-header border-bottom">
-                            <h6 class="m-0">Active Telegram Users</h6>
+                    <div class="card-post__author d-flex">
+                        <a href="#" class="card-post__author-avatar card-post__author-avatar--small"
+                           style="background-image: url('/static/dashboard/images/icons/telegram.png');">
+                        </a>
+                        <div class="d-flex flex-column justify-content-center ml-3">
+                            <span class="card-post__author-name">Telegram Notifications</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="card-body p-0 pb-3 text-center">
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item px-3">
+                            <p class="card-text text-muted" style="text-align: start">
+                                To add Telegram notifications you should insert the telegram username below and chose
+                                the user who will be receiving notifications. Check telegram first notification will be
+                                sent!
+                            </p>
 
                             <form class="" action="{% url 'telegram_new_user' %}" method="post">
                                 {% csrf_token %}
                                 <div class="row justify-content-center">
 
-                                        <div class="row">
-                                            <div class="px-3">
-                                                <input type="text" class="form-control" required name="username" placeholder="@username">
-                                            </div>
-                                            <div class="px-3">
-                                                <select class="form-control" name="user">
 
-                                                <option value="" disabled selected>Select user</option>
-                                                {% for user in users %}
-                                                    <option value="{{ user.0 }}">{{ user.1 }} {{ user.2 }}</option>
-                                                {% endfor %}
-                                                </select>
-                                            </div>
-
-                                            <div class="px-3">
-                                                <button type="submit" class="mb-4 btn btn-primary mr-2 container-fluid">
-                                                    Save
-                                                </button>
-                                            </div>
-                                        </div>
+                                    <div class="px-1">
+                                        <strong class="text-muted d-block mb-2" style="text-align: start">
+                                            Telegram nickname
+                                        </strong>
+                                        <input type="text" class="form-control" required name="username"
+                                               placeholder="@username">
                                     </div>
+
+                                    <div class="px-1">
+                                        <strong class="text-muted d-block mb-2" style="text-align: start">
+                                            Username
+                                        </strong>
+                                        <select class="form-control" name="user">
+
+                                            <option value="" disabled selected>Select user</option>
+                                            {% for user in users %}
+                                                <option value="{{ user.0 }}">{{ user.1 }} {{ user.2 }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+
+                                    <div class="px-1">
+                                        <strong class="text-muted d-block mb-2" style="text-align: start"><br></strong>
+                                        <button type="submit" class="mb-0 btn btn-primary mr-4 container-fluid">
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
                             </form>
+                        </li>
+                    </ul>
+                    <table class="table mb-0">
+                        <thead class="bg-light">
+                        <tr>
+                            <th scope="col" class="border-0">User</th>
+                            <th scope="col" class="border-0">Telegram username</th>
+                            <th scope="col" class="border-0">Actions</th>
 
-                        </div>
-                        <div class="card-body p-0 pb-3 text-center">
-                            <table class="table mb-0">
-                                <thead class="bg-light">
-                                <tr>
-                                    <th scope="col" class="border-0">User</th>
-                                    <th scope="col" class="border-0">Telegram username</th>
-                                    <th scope="col" class="border-0">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in telegram %}
+                            <tr>
+                                <form class="" action="{% url 'telegram_delete_user' %}" method="post">
+                                    {% csrf_token %}
+                                    <td>{{ user.1 }} {{ user.2 }}</td>
+                                    <td>{{ user.3 }}</td>
+                                    <td>
+                                        <button type="submit" class="mb-0 btn btn-primary mr-2" name="username"
+                                                value="{{ user.3 }}">Delete
+                                        </button>
+                                    </td>
+                                </form>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div> <!-- Telegram card -->
 
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for user in telegram %}
-                                    <tr>
-                                        <form class="" action="{% url 'telegram_delete_user' %}" method="post">
-                                            {% csrf_token %}
-                                            <td>{{ user.1 }} {{ user.2 }}</td>
-                                            <td>{{ user.3 }}</td>
-                                            <td>
-                                                <button type="submit" class="mb-4 btn btn-primary mr-2" name="username"
-                                                        value="{{ user.3 }}">Delete
-                                                </button>
-                                            </td>
-                                        </form>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
+        <div class="pt-5 col-lg-5">
+            <div class="card card-small mb-4">
+
+                <div class="card-header border-bottom">
+                    <div class="card-post__author d-flex">
+                        <a href="#" class="card-post__author-avatar card-post__author-avatar--small"
+                           style="background-image: url('/static/dashboard/images/icons/facebook.png');">
+                        </a>
+                        <div class="d-flex flex-column justify-content-center ml-3">
+                            <span class="card-post__author-name">Messenger Notifications</span>
                         </div>
                     </div>
                 </div>
-            </div>
 
-        </div>
-    </div>
+                <div class="card-body p-0 pb-3 text-center"> <!-- Card body -->
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
 
-
-
-
-    <div class="row justify-content-center">
-        <div class="container pt-5">
-            <div class="row">
-                <div class="col">
-                    <div class="card card-small mb-4">
-                        <div class="card-header border-bottom">
-                            <h6 class="m-0">Active Messenger Users</h6>
+                            <p class="card-text text-muted" style="text-align: start">
+                                To add Facebook Messenger notifications you should go to the Facebook page end copy the
+                                profile url. After successfully having done previous step paste the link below and chose
+                                the user who will be receiving notifications.
+                            </p>
 
                             <form class="" action="{% url 'messenger_new_user' %}" method="post">
                                 {% csrf_token %}
                                 <div class="row justify-content-center">
+                                    <div class="row">
+                                        <div class="px-1">
+                                            <strong class="text-muted d-block mb-2" style="text-align: start">
+                                                Account link
+                                            </strong>
+                                            <input type="text" class="form-control" required name="facebook_url"
+                                                   placeholder="facebook url">
+                                        </div>
 
-                                        <div class="row">
-                                            <div class="px-3">
-                                                <input type="text" class="form-control" required name="facebook_url" placeholder="facebook url">
-                                            </div>
-                                            <div class="px-3">
-                                                <select class="form-control" name="user">
-
+                                        <div class="px-1">
+                                            <strong class="text-muted d-block mb-2" style="text-align: start">
+                                                Username
+                                            </strong>
+                                            <select class="form-control" name="user">
                                                 <option value="" disabled selected>Select user</option>
                                                 {% for user in users %}
                                                     <option value="{{ user.0 }}">{{ user.1 }} {{ user.2 }}</option>
                                                 {% endfor %}
-                                                </select>
-                                            </div>
-
-                                            <div class="px-3">
-                                                <button type="submit" class="mb-4 btn btn-primary mr-2 container-fluid">
-                                                    Save
-                                                </button>
-                                            </div>
+                                            </select>
                                         </div>
+
+                                        <div class="px-1"><strong class="text-muted d-block mb-2"
+                                                                  style="text-align: start"><br></strong>
+                                            <button type="submit" class="mb-0 btn btn-primary mr-4 container-fluid">
+                                                Save
+                                            </button>
+                                        </div>
+
                                     </div>
+                                </div>
                             </form>
+                        </li>
+                    </ul>
+                    <table class="table mb-0">
+                        <thead class="bg-light">
+                        <tr>
+                            <th scope="col" class="border-0">User</th>
+                            {#                                    <th scope="col" class="border-0">Telegram username</th>#}
+                            <th scope="col" class="border-0">Actions</th>
 
-                        </div>
-                        <div class="card-body p-0 pb-3 text-center">
-                            <table class="table mb-0">
-                                <thead class="bg-light">
-                                <tr>
-                                    <th scope="col" class="border-0">User</th>
-{#                                    <th scope="col" class="border-0">Telegram username</th>#}
-                                    <th scope="col" class="border-0">Actions</th>
-
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for user in messenger %}
-                                    <tr>
-                                        <form class="" action="{% url 'messenger_delete_user' %}" method="post">
-                                            {% csrf_token %}
-                                            <td>{{ user.1 }} {{ user.2 }}</td>
-{#                                            <td>{{ user.3 }}</td>#}
-                                            <td>
-                                                <button type="submit" class="mb-4 btn btn-primary mr-2" name="username"
-                                                        value="{{ user.0 }}">Delete
-                                                </button>
-                                            </td>
-                                        </form>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in messenger %}
+                            <tr>
+                                <form class="" action="{% url 'messenger_delete_user' %}" method="post">
+                                    {% csrf_token %}
+                                    <td>{{ user.1 }} {{ user.2 }}</td>
+                                    {#                                            <td>{{ user.3 }}</td>#}
+                                    <td>
+                                        <button type="submit" class="mb-0 btn btn-primary mr-2" name="username"
+                                                value="{{ user.0 }}">Delete
+                                        </button>
+                                    </td>
+                                </form>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div> <!-- Card body ends -->
             </div>
+        </div> <!-- Facebook Messenger card -->
 
-        </div>
-    </div>
+    </div> <!-- Main row ends -->
 {% endblock %}

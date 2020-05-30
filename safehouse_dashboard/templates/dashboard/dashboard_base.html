@@ -32,7 +32,8 @@
                 <div class="nav-wrapper">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == "dashboard_view" %}active{% endif %}" href={% url 'dashboard_view' %}>
+                            <a class="nav-link {% if request.resolver_match.url_name == "dashboard_view" %}active{% endif %}"
+                               href={% url 'dashboard_view' %}>
                                 <i class="material-icons">dashboard</i>
                                 <span>Dashboard</span>
                             </a>
@@ -43,38 +44,42 @@
                         {#                                <span>Blog Posts</span>#}
                         {#                            </a>#}
                         {#                        </li>#}
+                        {% if preferences.0 == 1 %}
                         <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == "valves_view" %}active{% endif %}" href="{% url 'valves_view' %}">
+                            <a class="nav-link {% if request.resolver_match.url_name == "valves_view" %}active{% endif %}"
+                               href="{% url 'valves_view' %}">
                                 <i class="material-icons">add</i>
                                 <span>Add New Valve</span>
                             </a>
                         </li>
+                    {% endif %}
                         <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == "telegram_notifications_view" %}active{% endif %}" href="{% url 'telegram_notifications_view' %}">
+                            <a class="nav-link {% if request.resolver_match.url_name == "telegram_notifications_view" %}active{% endif %}"
+                               href="{% url 'telegram_notifications_view' %}">
                                 <i class="material-icons">send</i>
                                 <span>Notifications</span>
                             </a>
                         </li>
-{#                        <li class="nav-item">#}
-{#                            <a class="nav-link " href="tables.html">#}
-{#                                <i class="material-icons">table_chart</i>#}
-{#                                <span>Tables</span>#}
-{#                            </a>#}
-{#                        </li>#}
-{#                        {% if  preferences.0 == 1%}#}
+                        {#                        <li class="nav-item">#}
+                        {#                            <a class="nav-link " href="tables.html">#}
+                        {#                                <i class="material-icons">table_chart</i>#}
+                        {#                                <span>Tables</span>#}
+                        {#                            </a>#}
+                        {#                        </li>#}
+                        {#                        {% if  preferences.0 == 1%}#}
                         <li class="nav-item {% if request.resolver_match.url_name == "users_view" %}active{% endif %}">
                             <a class="nav-link " href="{% url 'users_view' %}">
                                 <i class="material-icons">person</i>
                                 <span>Users</span>
                             </a>
                         </li>
-{#                        {% endif %}#}
-{#                        <li class="nav-item">#}
-{#                            <a class="nav-link " href="errors.html">#}
-{#                                <i class="material-icons">error</i>#}
-{#                                <span>Errors</span>#}
-{#                            </a>#}
-{#                        </li>#}
+                        {#                        {% endif %}#}
+                        {#                        <li class="nav-item">#}
+                        {#                            <a class="nav-link " href="errors.html">#}
+                        {#                                <i class="material-icons">error</i>#}
+                        {#                                <span>Errors</span>#}
+                        {#                            </a>#}
+                        {#                        </li>#}
                     </ul>
                 </div>
             </aside>
@@ -92,7 +97,7 @@
                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <div class="nav-link-icon__wrapper">
                                         <i class="material-icons">&#xE7F4;</i>
-                                        <span class="badge badge-pill badge-danger">2</span>
+                                        <span class="badge badge-pill badge-danger">1</span>
                                     </div>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-small" aria-labelledby="dropdownMenuLink">
@@ -103,26 +108,26 @@
                                             </div>
                                         </div>
                                         <div class="notification__content">
-                                            <span class="notification__category">Analytics</span>
-                                            <p>Your website’s active users count increased by
-                                                <span class="text-success text-semibold">28%</span> in the last week.
-                                                Great
-                                                job!</p>
+                                            <span class="notification__category">Notifications</span>
+                                            <p><span class="text-success text-semibold">Thank you for joining our dashboard.</span> Dashboard notifications about leakages
+                                                will be accessible here soon
+
+                                            </p>
                                         </div>
                                     </a>
-                                    <a class="dropdown-item" href="#">
-                                        <div class="notification__icon-wrapper">
-                                            <div class="notification__icon">
-                                                <i class="material-icons">&#xE8D1;</i>
-                                            </div>
-                                        </div>
-                                        <div class="notification__content">
-                                            <span class="notification__category">Sales</span>
-                                            <p>Last week your store’s sales count decreased by
-                                                <span class="text-danger text-semibold">5.52%</span>. It could have been
-                                                worse!</p>
-                                        </div>
-                                    </a>
+                                    {#                                    <a class="dropdown-item" href="#">#}
+                                    {#                                        <div class="notification__icon-wrapper">#}
+                                    {#                                            <div class="notification__icon">#}
+                                    {#                                                <i class="material-icons">&#xE8D1;</i>#}
+                                    {#                                            </div>#}
+                                    {#                                        </div>#}
+                                    {#                                        <div class="notification__content">#}
+                                    {#                                            <span class="notification__category">Sales</span>#}
+                                    {#                                            <p>Last week your store’s sales count decreased by#}
+                                    {#                                                <span class="text-danger text-semibold">5.52%</span>. It could have been#}
+                                    {#                                                worse!</p>#}
+                                    {#                                        </div>#}
+                                    {#                                    </a>#}
                                     <a class="dropdown-item notification__all text-center" href="#"> View all
                                         Notifications </a>
                                 </div>
@@ -130,7 +135,9 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-nowrap px-3" data-toggle="dropdown" href="#"
                                    role="button" aria-haspopup="true" aria-expanded="false">
-                                                        <img class="user-avatar rounded-circle mr-2" src="{% static '/dashboard/images/icons/person.png' %}" style="background-color: #c3c7cc;" alt="">
+                                    <img class="user-avatar rounded-circle mr-2"
+                                         src="{% static '/dashboard/images/icons/person.png' %}"
+                                         style="background-color: #c3c7cc;" alt="">
                                     <span class="d-none d-md-inline-block">{{ user }}</span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-small">
@@ -138,8 +145,8 @@
                                         <i class="material-icons">&#xE7FD;</i> Profile</a>
                                     {#                                    <a class="dropdown-item" href="components-blog-posts.html">#}
                                     {#                                        <i class="material-icons">vertical_split</i> Blog Posts</a>#}
-{#                                    <a class="dropdown-item" href="add-new-post.html">#}
-{#                                        <i class="material-icons">note_add</i> Add New Post</a>#}
+                                    {#                                    <a class="dropdown-item" href="add-new-post.html">#}
+                                    {#                                        <i class="material-icons">note_add</i> Add New Post</a>#}
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item text-danger" href="{% url 'logout_view' %}">
                                         <i class="material-icons text-danger">&#xE879;</i> Logout </a>

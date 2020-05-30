@@ -1,52 +1,63 @@
 {% extends "./dashboard_base.html" %}
-
 {% block main-content %}
-
-    <br>
-    {% if preferences.0 == 1 %}
-
-        <div class="card card-small blog-comments" style="max-width: 500px">
-            <div class="card-header border-bottom">
-                <h6 class="m-0">Add valve</h6>
+        <div class="page-header row no-gutters py-4">
+            <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
+                <span class="text-uppercase page-subtitle">Overview</span>
+                <h3 class="page-title">Valves</h3>
             </div>
-            <form class="" action="{% url 'create_new_valve' %}" method="post">
-                <br>
-                {% csrf_token %}
-                <div class="container-fluid">
-                    <div class="row justify-content-center">
-                        <div class="form-group">
-                            <input type="text" class="form-control" required name="name" placeholder="Valve Name">
-                            <div class="feedback" id="formFeedback"></div>
-                        </div>
-                        <div class="form-group">
-                            <select class="form-control" name="location">
-                                {% for location in locations %}
-                                    <option selected="">{{ location.1 }}</option>
-                                {% endfor %}
-                            </select>
-                            <div class="invalid-feedback">Please select your state.</div>
-
-
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="mb-4 btn btn-primary mr-2 container-fluid">Add Valve</button>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </form>
         </div>
+        <div class="row">
+        <div class="col-lg-4 col-md-12 col-sm-12 mb-4">
+            <div class="card card-small blog-comments" style="max-width: 500px">
+                <div class="card-header border-bottom">
+                    <h6 class="m-0">Add valve</h6>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item px-3">
+                            <p class="card-text text-muted">
+                                Fill up the form to create and add valve to the system.
+                                After pressing the button below you will be redirected to the instruction page. Please
+                                follow the instructions on it to successfully add new valve.
+                            </p>
+                            <form class="" action="{% url 'create_new_valve' %}" method="post">
+                                {% csrf_token %}
+                                <div class="container-fluid">
 
-        <br>
-    {% endif %}
+                                    <div class="form-group">
+                                        <strong class="text-muted d-block mb-2">Valve name</strong>
+                                        <input type="text" class="form-control" required name="name"
+                                               placeholder="Water Valve">
+                                        <div class="feedback" id="formFeedback"></div>
+                                    </div>
 
-    <div class="card card-small mb-4">
+                                    <div class="form-group">
+                                        <strong class="text-muted d-block mb-2">Location</strong>
+                                        <select class="form-control" name="location">
+                                            {% for location in locations %}
+                                                <option selected="">{{ location.1 }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <button type="submit" class="mb-4 btn btn-primary mr-2 container-fluid">
+                                            Add Valve
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="card card-small mb-4 col-lg-8">
         <div class="card-header border-bottom">
             <h6 class="m-0">Dashboard Valves</h6>
         </div>
         <div class="card-body p-0 pb-3 text-center">
+
             <table class="table mb-0">
                 <thead class="bg-light">
                 <tr>
@@ -79,8 +90,14 @@
                 {% endfor %}
                 </tbody>
             </table>
+
+
         </div>
     </div>
+        </div>
+
+
+
 
 
 {% endblock %}
